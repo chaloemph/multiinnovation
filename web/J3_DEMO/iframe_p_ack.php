@@ -214,7 +214,7 @@ $ROST_PARENT = $row3['ROST_PARENT'];
     <div class="modal-header">
 	 <!-- Button trigger modal -->
 	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#viewLastInsert">
-					view last insert data
+	ดูข้อมูลที่เพิ่มล่าสุด
 	</button>
 
      <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -341,18 +341,12 @@ $ROST_PARENT = $row3['ROST_PARENT'];
  </div>
 </div>
 
-
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
-  Launch demo modal
-</button>
-
 <!-- Modal -->
 <div class="modal fade" id="viewLastInsert" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalLongTitle">ข้อมูลที่เพิ่มล่าสุด</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -368,10 +362,6 @@ $ROST_PARENT = $row3['ROST_PARENT'];
 				</tr>
 			</thead>
 		</table>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
   </div>
@@ -438,26 +428,6 @@ $ROST_PARENT = $row3['ROST_PARENT'];
             		});
             	});
             </script>
-            <script>
-            	// $(document).ready(function () {
-            	// 	$('.editbtn').on('click', function (){
-            	// 		$('#EditModal').modal('show');
-            	// 		$tr = $(this).closest('tr');
-
-            	// 		var data = $tr.children("td").map(function(){
-            	// 			return $(this).text();
-            	// 		}).get();
-
-            	// 		console.log(data);
-
-            	// 		$('#ROST_CPOS').val(data[0]);
-            	// 		$('#ROST_POSNAME').val(data[1]);
-            	// 		$('#ROST_POSNAME_ACM').val(data[2]);
-            	// 		$('#ROST_PARENT').val(data[3]);
-
-            	// 	});	
-            	// });
-            </script>
 			<!-- amang -->
 			<script>
 				$(document).ready(function () {
@@ -473,11 +443,9 @@ $ROST_PARENT = $row3['ROST_PARENT'];
 						data: {rost_id:ROST_ID , do:'modal_edit_p_ack'},
 						dataType: "json",
 						success: function (response) {
-							// console.log(response)
 							var arr_input_key = ['ACK_ID', 'ROST_CPOS', 'ROST_POSNAME'  , 'ROST_POSNAME_ACM' , 'ROST_NCPOS12', 'ROST_ID', 'ROST_PARENT', 'ROST_NUNIT', 'ROST_NPARENT' , 'ROST_UNIT' ]
 							var arr_select_key = ['ROST_LAO_MAJ' , 'ROST_RANK' , 'CLAO_NAME_SHORT' ]
 							$.each(response, function (indexInArray, valueOfElement) { 
-								// console.log(indexInArray+': '+valueOfElement)
 
 								if (jQuery.inArray(indexInArray, arr_input_key) !== -1){
 									if (valueOfElement != ''){
@@ -492,10 +460,6 @@ $ROST_PARENT = $row3['ROST_PARENT'];
 										}else{
 											modal.find('select[name="'+indexInArray+'"]').val(valueOfElement)
 										}
-
-
-										// modal.find('select[name="ROST_RANK"]').val('1')
-
 									}
 								}
 							});
@@ -511,9 +475,6 @@ $ROST_PARENT = $row3['ROST_PARENT'];
 
 				$('#EditModal form#user_form').on('submit', function (event) {
 					var _this = $(this)
-
-					alert()
-
 					$.ajax({
 						type: "POST",
 						url: "query.php",
@@ -521,7 +482,7 @@ $ROST_PARENT = $row3['ROST_PARENT'];
 						dataType: "json",
 						success: function (response) {
 							console.log(response)
-							// alert()
+							alert('บันทึกข้อมูลเรียบร้อยแล้ว')
 						}
 					});
 
@@ -529,13 +490,8 @@ $ROST_PARENT = $row3['ROST_PARENT'];
 
 				});
 
-
-
-				
-
 				$('#viewLastInsert').on('show.bs.modal', function (event) {
-					var button = $(event.relatedTarget) // Button that triggered the modal
-					// var ROST_ID = button.data('id') // Extract info from data-* attributes
+					var button = $(event.relatedTarget) 
 					var modal = $(this)
 					var editmodal = $('#EditModal')
 					var ROST_CPOS = editmodal.find('input[name="ROST_CPOS"]').val()
@@ -554,15 +510,12 @@ $ROST_PARENT = $row3['ROST_PARENT'];
 						success: function (response) {
 							if (response){
 								console.log(response)
-								// $('#lastdata').DataTable();
-
 								if ($.fn.DataTable.isDataTable('#lastdata')) {
 
 										$('#lastdata').dataTable().fnClearTable();
 										$('#lastdata').dataTable().fnDestroy();
 
 										}
-
 
 								LoadCurrentReport(response)
 							}
@@ -574,11 +527,6 @@ $ROST_PARENT = $row3['ROST_PARENT'];
 				});
 
 				function LoadCurrentReport(oResults) {
- 
-				// var aDemoItems  = oResults.lDemographicItems; //
-				// var jsonString = JSON.stringify(aDemoItems  ) //for testing
-				
-				//Load  datatable
 				var oTblReport = $("#lastdata")
 
 				oTblReport.DataTable ({
