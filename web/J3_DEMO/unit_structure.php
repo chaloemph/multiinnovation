@@ -328,8 +328,8 @@ $UNIT_CODE = $_GET['id'];
                     <td style="width: 160px; text-align: center;"><?=$UNIT_CODE?></td>
                     <td style="width: 500px;"><?=$NRPT_NAME?></td>
                     <td style="width: 180px;"><?=$NRPT_ACM?></td>
-                    <td style="width: 170px; text-align: center;"><?=$NRPT_UNIT_PARENT?></td>
-                    <td style="width: 130px; text-align: center;"> 
+                    <td style="width: 150px; text-align: center;"><?=$NRPT_UNIT_PARENT?></td>
+                    <td style="width: 180px; text-align: center;"> 
                       <a class="btn btn-success btn-sm" href="create_ajy.php?id=<?=$UNIT_CODE;?>">
                         อจย.
                       </a>
@@ -348,11 +348,8 @@ $UNIT_CODE = $_GET['id'];
                         </i>
                         Edit
                       </a>
-                      <a class="btn btn-danger btn-sm" href="#">
-                        <i class="fas fa-trash">
-                        </i>
-                        Delete
-                      </a>
+          </div>
+                      
                     </td>
                   </tr>
                 <?php } ?>
@@ -366,6 +363,9 @@ $UNIT_CODE = $_GET['id'];
       </div>
 
 
+      
+
+
       <footer class="main-footer">
         <strong>Copyright &copy; 2019 </strong>
         Multi Innovation Engineering Co.,Ltd
@@ -375,6 +375,8 @@ $UNIT_CODE = $_GET['id'];
       <aside class="control-sidebar control-sidebar-dark">
       </aside>
     </div>
+
+    
 
     <script src="temp_index/plugins/jquery/jquery.min.js"></script>
     <script src="temp_index/plugins/jquery-ui/jquery-ui.min.js"></script>
@@ -393,24 +395,28 @@ $UNIT_CODE = $_GET['id'];
     <script src="temp_index/plugins/summernote/summernote-bs4.min.js"></script>
     <script src="temp_index/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
     <script src="temp_index/dist/js/adminlte.js"></script>
-    <script src="temp_index/dist/js/pages/dashboard.js"></script>
+    <!-- <script src="temp_index/dist/js/pages/dashboard.js"></script> -->
     <script src="temp_index/dist/js/demo.js"></script>
     <script src="temp_index/plugins/jquery/jquery.min.js"></script>
     <script src="temp_index/plugins/datatables/jquery.dataTables.js"></script>
     <script src="temp_index/plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
 
+
+    
+
     <script>
       $(function () {
         $("#example1").DataTable();
-        $('#example2').DataTable({
-          "paging": true,
-          "lengthChange": false,
-          "searching": false,
-          "ordering": true,
-          "info": true,
-          "autoWidth": false,
-        });
+        // $('#example2').DataTable({
+        //   "paging": true,
+        //   "lengthChange": false,
+        //   "searching": false,
+        //   "ordering": true,
+        //   "info": true,
+        //   "autoWidth": false,
+        // });
       });
+
     </script>
   </body>
   </html>

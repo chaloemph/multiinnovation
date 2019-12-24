@@ -316,6 +316,11 @@ while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
 									<div class="card-header">
 										<h3 class="card-title">จัดทำข้อมูลอัตราเฉพาะกิจ</h3>
 										<div class="card-tools">
+										<button class="btn btn-secondary btn-sm my-2" type="button"  data-toggle="modal" data-target=".modalMoveStructure" data-unit_code="<?=$UNIT_CODE;?>" data-nrpt_unit_parent="<?=$NRPT_UNIT_PARENT;?>">
+											<i class="fas fa-compress-alt"></i>
+												ย้ายโครงสร้าง
+											</button>
+
 											<button type="submit" class="btn btn-info"><i class="fas fa-save"> บันทึกข้อมูล</i></button>
 											<button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
 										</div>
@@ -457,6 +462,16 @@ while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
 			</div>
 		</div>
 
+		<div class="modal fade modalMoveStructure" tabindex="-1" role="dialog" aria-labelledby="modalMoveStructureModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-body">
+              
+            </div>
+          </div>
+        </div>
+      </div>
+
 
 		<footer class="main-footer">
 			<strong>Copyright &copy; 2019 </strong>
@@ -527,6 +542,11 @@ while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
 	<script src="temp_index/plugins/jquery/jquery.min.js"></script>
 	<script src="temp_index/plugins/datatables/jquery.dataTables.js"></script>
 	<script src="temp_index/plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
+
+
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 	<script>
 		ClassicEditor
 		.create( document.querySelector( '#editor' ) )
@@ -590,19 +610,45 @@ while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
 	            <script>
 	            	$(function () {
 	            		$("#example1").DataTable();
-	            		$('#example2').DataTable({
-	            			"paging": true,
-	            			"lengthChange": false,
-	            			"searching": false,
-	            			"ordering": true,
-	            			"info": true,
-	            			"autoWidth": false,
-	            		});
+	            		// $('#example2').DataTable({
+	            		// 	"paging": true,
+	            		// 	"lengthChange": false,
+	            		// 	"searching": false,
+	            		// 	"ordering": true,
+	            		// 	"info": true,
+	            		// 	"autoWidth": false,
+	            		// });
 
 	            		$('button.tablink').on('click', function (event) {
 	            			return false;
 	            		});
 	            	});
+
+
+					$('.modalMoveStructure').on('show.bs.modal', function (event) {
+						var button = $(event.relatedTarget) // Button that triggered the modal
+						var nrpt_unit_parent = button.data('nrpt_unit_parent') 
+						var unit_code = button.data('unit_code') 
+						// var digit = unit_code.substring(0, 4);
+						// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+						// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+						var modal = $(this)
+						$.ajax({
+						type: "POST",
+						url: "modalMoveStructure.php",
+						data: {unit_code , nrpt_unit_parent },
+						// dataType: "",
+						success: function (response) {
+							// console.log(response)
+							modal.find('.modal-body').html(response)
+						}
+						});
+						
+					})
+
+					$('.modalMoveStructure').on('hidden.bs.modal', function (event) {
+						$(this).find('.modal-body').removeClass('text-center')
+					})
 	            </script>
 	        </body>
 	        </html>
