@@ -641,6 +641,8 @@ while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
 						success: function (response) {
 							// console.log(response)
 							modal.find('.modal-body').html(response)
+
+							
 						}
 						});
 						
