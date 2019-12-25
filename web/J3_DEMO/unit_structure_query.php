@@ -15,8 +15,6 @@
             break;
             case 'process':
             include 'connect.php';
-
-            
                 $sql = "TRUNCATE `rtarf`.`j3_unit_acm_transaction`";
                 $res = mysqli_query($conn, $sql);
                 $sql = "TRUNCATE `rtarf`.`j3_nrpt_transaction`";
@@ -75,9 +73,6 @@
 
 
 
-                $j3_rost = "select * from j3_rost_transaction WHERE 1";
-                $query = mysqli_query($conn, $j3_rost);
-
                 $EXPERT_MIL_ID = '';
                 $RATE_P_REMARK = '';
                 $RATE_P_NUMBER = '';
@@ -85,9 +80,9 @@
                 $SALARY_ID = '';
                 $ACK_ID = $_POST["ACK_ID"];
 
- 
 
-
+                $j3_rost = "select * from j3_rost_transaction WHERE 1";
+                $query = mysqli_query($conn, $j3_rost);
                 while($row = mysqli_fetch_assoc($query)) {
 
                     $j3_ratepersonal_sql = "INSERT INTO `j3_ratepersonal` (`RATE_P_NUM`, `ROST_CPOS`, 
@@ -96,10 +91,11 @@
                      `ROST_ID`, `ROST_OLD_ID`) VALUES (NULL, '".$row["ROST_CPOS"]."',
                       '".$EXPERT_MIL_ID."', '".$RATE_P_REMARK."', '".$RATE_P_NUMBER."', 
                       '".$RATE_P_RANK."', '".$SALARY_ID."', '".$ACK_ID."', '1',
-                       '".$row["ROST_ID"]."', '".$row["ROST_ID"]."')"
+                       '".$row["ROST_ID"]."', '".$row["ROST_ID"]."')";
+                        $resss = mysqli_query($conn, $j3_ratepersonal_sql);
+
+
                 }
-
-
 
 
 
