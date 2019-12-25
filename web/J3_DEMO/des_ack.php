@@ -457,6 +457,7 @@ $row1=$stmt1->fetch(PDO::FETCH_ASSOC);
 
 														include ('connectpdo.php');
 														$sql2 = "SELECT * FROM j3_rost WHERE ROST_NPARENT = :UNIT_CODE OR ROST_NUNIT = :UNIT_CODE_1 OR ROST_UNIT = :UNIT_CODE_2 OR ROST_PARENT = :UNIT_CODE_3";
+													echo $sql2;
 														$stmt2=$db->prepare($sql2);
 														$stmt2->bindparam(':UNIT_CODE',$UNIT_CODE);
 														$stmt2->bindparam(':UNIT_CODE_1',$UNIT_CODE_1);

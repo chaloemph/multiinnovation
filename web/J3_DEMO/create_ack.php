@@ -342,7 +342,7 @@ while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
 											<div class="col-12 col-sm-2">
 												<div class="form-group">
 													<label>หมายเลขหน่วย(ใหม่)</label>
-													<input type="text" class="form-control" name="UNIT_CODE" >
+													<input type="text" class="form-control" name="UNIT_NAME2" >
 												</div>
 											</div>
 											<div class="col-12 col-sm-3">
@@ -366,7 +366,7 @@ while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
 											<div class="col-12 col-sm-2">
 												<div class="form-group">
 													<label>หน่วยงาน</label>
-													<select class="form-control select2" style="width: 100%;" name="UNIT_ACM_ID">
+													<select class="form-control select2" style="width: 100%;" name="UNIT_ACM_ID2">
 														<option selected="selected"></option>
 														<?php
 
@@ -642,7 +642,18 @@ while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
 							// console.log(response)
 							modal.find('.modal-body').html(response)
 
-							
+							// $.ajax({
+							// 	type: "POST",
+							// 	url: "ct_create_ack.php",
+							// 	data: $('form[action="ct_create_ack.php"]').serialize() ,
+							// 	// dataType: "dataType",
+							// 	success: function (response) {
+							// 		console.log(response)
+
+							// 		alert('ย้ายโครงสร้างเรียบร้อยแล้ว')
+							// 		location.reload();
+							// 	}
+							// });
 						}
 						});
 						

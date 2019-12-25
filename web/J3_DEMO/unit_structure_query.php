@@ -36,6 +36,8 @@
                 select * from j3_rost WHERE SUBSTRING(ROST_UNIT, 1, 4)  LIKE  '".substr($_POST["UNIT_CODE"] , 0, 4)."'   ";
                 $res = mysqli_query($conn, $sql2);
 
+
+
                 $sql3 = "insert into j3_nrpt_transaction 
                 select * from j3_nrpt WHERE SUBSTRING(UNIT_CODE, 1, 4)  LIKE  '".substr($_POST["UNIT_CODE"] , 0, 4)."'   ";
                 $res = mysqli_query($conn, $sql3);
@@ -54,28 +56,11 @@
                 $res2 = mysqli_query($conn, $sql_main2);
 
 
-                $sql_main3 = "UPDATE  `j3_nrpt_transaction` SET  
-                UNIT_CODE = Replace(UNIT_CODE , Substring(UNIT_CODE, 1, 4), $index) ,
-                NRPT_NUNIT = Replace(NRPT_NUNIT , Substring(NRPT_NUNIT, 1, 4), $index) ,
-                NRPT_UNIT_PARENT = Replace(NRPT_UNIT_PARENT , Substring(NRPT_UNIT_PARENT, 1, 4), $index) ,
-                UNIT_ACM_ID = Replace(UNIT_ACM_ID , Substring(UNIT_ACM_ID, 1, 4), $index) 
-                WHERE Substring(UNIT_CODE, 1, 2) != '".substr($_POST["UNIT_ACM_ID"] , 0, 2)."' ";
-                $res3 = mysqli_query($conn, $sql_main3);
-
-
-                // $sql3 = "insert into j3_rost_transaction 
-                // select * from j3_rost WHERE SUBSTRING(ROST_UNIT, 1, 2) LIKE  '".substr($_POST["UNIT_ACM_ID"] , 0, 2)."'   ";
-                // $res3 = mysqli_query($conn, $sql3);
-
-                $sql4 = "insert into j3_nrpt_transaction 
-                select * from j3_nrpt WHERE SUBSTRING(UNIT_ACM_ID, 1, 2) LIKE  '".substr($_POST["UNIT_ACM_ID"] , 0, 2)."'   ";
-                $res4 = mysqli_query($conn, $sql4);
-
-
+                // move to rateposernal
 
                 $EXPERT_MIL_ID = '';
                 $RATE_P_REMARK = '';
-                $RATE_P_NUMBER = '';
+                $RATE_P_NUMBER = '1';
                 $RATE_P_RANK = '';
                 $SALARY_ID = '';
                 $ACK_ID = $_POST["ACK_ID"];
@@ -96,6 +81,26 @@
 
 
                 }
+
+
+
+
+                $sql_main3 = "UPDATE  `j3_nrpt_transaction` SET  
+                UNIT_CODE = Replace(UNIT_CODE , Substring(UNIT_CODE, 1, 4), $index) ,
+                NRPT_NUNIT = Replace(NRPT_NUNIT , Substring(NRPT_NUNIT, 1, 4), $index) ,
+                NRPT_UNIT_PARENT = Replace(NRPT_UNIT_PARENT , Substring(NRPT_UNIT_PARENT, 1, 4), $index) ,
+                UNIT_ACM_ID = Replace(UNIT_ACM_ID , Substring(UNIT_ACM_ID, 1, 4), $index) 
+                WHERE Substring(UNIT_CODE, 1, 2) != '".substr($_POST["UNIT_ACM_ID"] , 0, 2)."' ";
+                $res3 = mysqli_query($conn, $sql_main3);
+
+
+                $sql3 = "insert into j3_rost_transaction 
+                select * from j3_rost WHERE SUBSTRING(ROST_UNIT, 1, 2) LIKE  '".substr($_POST["UNIT_ACM_ID"] , 0, 2)."'   ";
+                $res3 = mysqli_query($conn, $sql3);
+
+                $sql4 = "insert into j3_nrpt_transaction 
+                select * from j3_nrpt WHERE SUBSTRING(UNIT_ACM_ID, 1, 2) LIKE  '".substr($_POST["UNIT_ACM_ID"] , 0, 2)."'   ";
+                $res4 = mysqli_query($conn, $sql4);
 
 
 
@@ -140,18 +145,18 @@
                     ROST_NPARENT = Replace(ROST_NPARENT , Substring(ROST_NPARENT, 1, 4), $unit_acm_four_digit )  
                       WHERE SUBSTRING(ROST_UNIT, 1, 4) = '".substr($row["UNIT_ACM_ID"] , 0, 4)."'  ";
                     $res_j3_rost = mysqli_query($conn, $sql_query_j3_rost);
-                    echo $sql_query_j3_rost;
+                    
+                    // echo json_encode($unit_acm);
+                    // echo json_encode($sql_query_j3_rost);
 
 
-                    $sql_query_j3_nrpt = "UPDATE j3_nrpt_transaction SET 
-                    UNIT_CODE = Replace(UNIT_CODE , Substring(UNIT_CODE, 1, 4), $unit_acm_four_digit ) , 
-                    NRPT_NUNIT = Replace(NRPT_NUNIT , Substring(NRPT_NUNIT, 1, 4), $unit_acm_four_digit ) , 
-                    NRPT_UNIT_PARENT = Replace(NRPT_UNIT_PARENT , Substring(NRPT_UNIT_PARENT, 1, 4), $unit_acm_four_digit ) , 
-                    UNIT_ACM_ID = Replace(UNIT_ACM_ID , Substring(UNIT_ACM_ID, 1, 4), $unit_acm_four_digit )  
-                      WHERE SUBSTRING(UNIT_CODE, 1, 4) = '".substr($row["UNIT_ACM_ID"] , 0, 4)."'  ";
-                    $res_j3_nrpt = mysqli_query($conn, $sql_query_j3_nrpt);
-
-
+                    // $sql_query_j3_nrpt = "UPDATE j3_nrpt_transaction SET 
+                    // UNIT_CODE = Replace(UNIT_CODE , Substring(UNIT_CODE, 1, 4), $unit_acm_four_digit ) , 
+                    // NRPT_NUNIT = Replace(NRPT_NUNIT , Substring(NRPT_NUNIT, 1, 4), $unit_acm_four_digit ) , 
+                    // NRPT_UNIT_PARENT = Replace(NRPT_UNIT_PARENT , Substring(NRPT_UNIT_PARENT, 1, 4), $unit_acm_four_digit ) , 
+                    // UNIT_ACM_ID = Replace(UNIT_ACM_ID , Substring(UNIT_ACM_ID, 1, 4), $unit_acm_four_digit )  
+                    //   WHERE SUBSTRING(UNIT_CODE, 1, 4) = '".substr($row["UNIT_ACM_ID"] , 0, 4)."'  ";
+                    // $res_j3_nrpt = mysqli_query($conn, $sql_query_j3_nrpt);
 
                     
                 }
@@ -187,8 +192,8 @@
                 $sql = "DELETE FROM j3_unit_acm WHERE j3_unit_acm.STATUS = 0 ";
                 $res = mysqli_query($conn, $sql);
 
-                // $sql = "DELETE FROM j3_nrpt WHERE j3_nrpt.STATUS = 0  ";
-                // $res = mysqli_query($conn, $sql);
+                $sql = "DELETE FROM j3_nrpt WHERE j3_nrpt.STATUS = 0  ";
+                $res = mysqli_query($conn, $sql);
 
 
 
@@ -207,7 +212,7 @@
 
 
                 
-                echo json_encode($sql);
+                // echo json_encode($sql);
             break;
         }
     }
