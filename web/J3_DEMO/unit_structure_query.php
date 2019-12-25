@@ -15,6 +15,8 @@
             break;
             case 'process':
             include 'connect.php';
+
+            
                 $sql = "TRUNCATE `rtarf`.`j3_unit_acm_transaction`";
                 $res = mysqli_query($conn, $sql);
                 $sql = "TRUNCATE `rtarf`.`j3_nrpt_transaction`";
@@ -70,6 +72,34 @@
                 $sql4 = "insert into j3_nrpt_transaction 
                 select * from j3_nrpt WHERE SUBSTRING(UNIT_ACM_ID, 1, 2) LIKE  '".substr($_POST["UNIT_ACM_ID"] , 0, 2)."'   ";
                 $res4 = mysqli_query($conn, $sql4);
+
+
+
+                $j3_rost = "select * from j3_rost_transaction WHERE 1";
+                $query = mysqli_query($conn, $j3_rost);
+
+                $EXPERT_MIL_ID = '';
+                $RATE_P_REMARK = '';
+                $RATE_P_NUMBER = '';
+                $RATE_P_RANK = '';
+                $SALARY_ID = '';
+                $ACK_ID = $_POST["ACK_ID"];
+
+ 
+
+
+                while($row = mysqli_fetch_assoc($query)) {
+
+                    $j3_ratepersonal_sql = "INSERT INTO `j3_ratepersonal` (`RATE_P_NUM`, `ROST_CPOS`, 
+                    `EXPERT_MIL_ID`, `RATE_P_REMARK`, `RATE_P_NUMBER`, 
+                    `RATE_P_RANK`, `SALARY_ID`, `ACK_ID`, `RATE_P_VERSION`,
+                     `ROST_ID`, `ROST_OLD_ID`) VALUES (NULL, '".$row["ROST_CPOS"]."',
+                      '".$EXPERT_MIL_ID."', '".$RATE_P_REMARK."', '".$RATE_P_NUMBER."', 
+                      '".$RATE_P_RANK."', '".$SALARY_ID."', '".$ACK_ID."', '1',
+                       '".$row["ROST_ID"]."', '".$row["ROST_ID"]."')"
+                }
+
+
 
 
 

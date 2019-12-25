@@ -54,7 +54,7 @@ $('select[name="PART_ID"]').on('change', function () {
 
 
 $("form.moveStructure").submit(function (e) { 
-    var formdata = $(this).serialize()
+    var formdata = $(this).serialize() + $('form[action="ct_create_ack.php"]').serialize()
     e.preventDefault();
     if (confirm('คุณต้องการประมวลผลย้ายโครงสร้าง ?')) {
         var modalBody  = $(this).parent()
@@ -75,18 +75,18 @@ $("form.moveStructure").submit(function (e) {
           success: function (response) {
             console.log(response)
 
-            $.ajax({
-								type: "POST",
-								url: "ct_create_ack.php",
-								data: $('form[action="ct_create_ack.php"]').serialize() ,
-								// dataType: "dataType",
-								success: function (response) {
-									console.log(response)
+            // $.ajax({
+						// 		type: "POST",
+						// 		url: "ct_create_ack.php",
+						// 		data: $('form[action="ct_create_ack.php"]').serialize() ,
+						// 		// dataType: "dataType",
+						// 		success: function (response) {
+						// 			console.log(response)
 
-									alert('ย้ายโครงสร้างเรียบร้อยแล้ว')
-									location.reload();
-								}
-							});
+						// 			alert('ย้ายโครงสร้างเรียบร้อยแล้ว')
+						// 			location.reload();
+						// 		}
+						// 	});
 
 
           }
