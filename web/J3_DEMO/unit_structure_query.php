@@ -43,7 +43,8 @@
                 $res = mysqli_query($conn, $sql3);
 
                 $sql_main = "UPDATE  `j3_unit_acm_transaction` SET  
-                UNIT_ACM_ID = Replace(UNIT_ACM_ID , Substring(UNIT_ACM_ID, 1, 4), $index) 
+                UNIT_ACM_ID = Replace(UNIT_ACM_ID , Substring(UNIT_ACM_ID, 1, 4), $index) ,
+                PART_ID = '".$_POST["PART_ID"]."'
                 WHERE Substring(UNIT_ACM_ID, 1, 2) != '".substr($_POST["UNIT_ACM_ID"] , 0, 2)."' ";
                 $res2 = mysqli_query($conn, $sql_main);
 
