@@ -32,11 +32,16 @@
                 select * from j3_unit_acm WHERE SUBSTRING(UNIT_ACM_ID, 1, 4)  LIKE  '".substr($_POST["UNIT_CODE"] , 0, 4)."'   ";
                 $res = mysqli_query($conn, $sql1);
 
+                // $sql2 = "insert into j3_rost_transaction 
+                // select * from j3_rost WHERE SUBSTRING(ROST_UNIT, 1, 4)  LIKE  '".substr($_POST["UNIT_CODE"] , 0, 4)."'   ";
+                // $res = mysqli_query($conn, $sql2);
+
+
                 $sql2 = "insert into j3_rost_transaction 
-                select * from j3_rost WHERE SUBSTRING(ROST_UNIT, 1, 4)  LIKE  '".substr($_POST["UNIT_CODE"] , 0, 4)."'   ";
+                select * from j3_rost WHERE ROST_NUNIT  LIKE  '".$_POST["UNIT_CODE"]."'   ";
                 $res = mysqli_query($conn, $sql2);
 
-
+                
 
                 $sql3 = "insert into j3_nrpt_transaction 
                 select * from j3_nrpt WHERE SUBSTRING(UNIT_CODE, 1, 4)  LIKE  '".substr($_POST["UNIT_CODE"] , 0, 4)."'   ";
@@ -55,6 +60,7 @@
                 ROST_NPARENT = Replace(ROST_NPARENT , Substring(ROST_NPARENT, 1, 4), $index) 
                 WHERE Substring(ROST_UNIT, 1, 2) != '".substr($_POST["UNIT_ACM_ID"] , 0, 2)."' ";
                 $res2 = mysqli_query($conn, $sql_main2);
+                
 
 
                 // move to rateposernal
@@ -179,7 +185,7 @@
                 // $sql1 = "UPDATE  j3_unit_acm SET STATUS = 0 WHERE SUBSTRING(UNIT_ACM_ID, 1, 4)  LIKE  '".substr($_POST["UNIT_CODE"] , 0, 4)."'   ";
                 // $res = mysqli_query($conn, $sql1);
 
-                $sql2 = "UPDATE  j3_rost SET STATUS = 0  WHERE SUBSTRING(ROST_UNIT, 1, 4)  LIKE  '".substr($_POST["UNIT_CODE"] , 0, 4)."'   ";
+                $sql2 = "UPDATE  j3_rost SET STATUS = 0  WHERE ROST_NUNIT  LIKE  '".$_POST["UNIT_CODE"]."'   ";
                 $res = mysqli_query($conn, $sql2);
 
                 $sql3 = "UPDATE  j3_nrpt SET STATUS = 0 WHERE SUBSTRING(UNIT_CODE, 1, 4)  LIKE  '".substr($_POST["UNIT_CODE"] , 0, 4)."'   ";
