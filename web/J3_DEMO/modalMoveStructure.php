@@ -16,12 +16,12 @@
 		?>
       </select>
     </div>
-    <div class="form-group col-md-12">
+    <!-- <div class="form-group col-md-12">
       <label for="UNIT_ACM_ID">สำนัก</label>
       <select id="UNIT_ACM_ID"  name="UNIT_ACM_ID" class="form-control" required>
         <option value="">กรุณาเลือก...</option>
       </select>
-    </div>
+    </div> -->
   </div>
   <div class="form-group col-md-12">
       <label for="UNIT_ACM_ID">ลำดับ</label>
@@ -56,15 +56,15 @@ $('select[name="PART_ID"]').on('change', function () {
 $("form.moveStructure").submit(function (e) { 
     var formdata = $(this).serialize() +"&"+$('form[action="ct_create_ack.php"]').serialize()
     e.preventDefault();
-    if (confirm('คุณต้องการประมวลผลย้ายโครงสร้าง ?')) {
+    // if (confirm('คุณต้องการประมวลผลย้ายโครงสร้าง ?')) {
         var modalBody  = $(this).parent()
         var spinner = `
         <div class="spinner-border text-secondary" role="status">
             <span class="sr-only">Loading...</span>
             </div>
         `
-        modalBody.empty()
-        modalBody.html(spinner).addClass('text-center')
+        // modalBody.empty()
+        // modalBody.html(spinner).addClass('text-center')
 
 
         $.ajax({
@@ -75,25 +75,25 @@ $("form.moveStructure").submit(function (e) {
           success: function (response) {
             console.log(response)
 
-            $.ajax({
-								type: "POST",
-								url: "ct_create_ack.php",
-								data: $('form[action="ct_create_ack.php"]').serialize() ,
-								// dataType: "dataType",
-								success: function (response) {
-									console.log(response)
+            // $.ajax({
+						// 		type: "POST",
+						// 		url: "ct_create_ack.php",
+						// 		data: $('form[action="ct_create_ack.php"]').serialize() ,
+						// 		// dataType: "dataType",
+						// 		success: function (response) {
+						// 			console.log(response)
 
-									alert('ย้ายโครงสร้างเรียบร้อยแล้ว')
-									location.reload();
-								}
-							});
+						// 			alert('ย้ายโครงสร้างเรียบร้อยแล้ว')
+						// 			location.reload();
+						// 		}
+						// 	});
 
 
           }
         });
 
        
-    }
+    // }
 
     
 });
