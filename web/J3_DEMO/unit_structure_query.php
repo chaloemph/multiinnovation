@@ -13,7 +13,7 @@
                 $row=$stmt->fetchall(PDO::FETCH_ASSOC);
                 echo json_encode($row);
             break;
-            case 'process':
+            case 'process2':
             include 'connect.php';
                 $sql = "TRUNCATE `rtarf`.`j3_unit_acm_transaction`";
                 $res = mysqli_query($conn, $sql);
@@ -104,6 +104,8 @@
                 $sql3 = "insert into j3_rost_transaction 
                 select * from j3_rost WHERE SUBSTRING(ROST_UNIT, 1, 2) LIKE  '".substr($_POST["UNIT_ACM_ID"] , 0, 2)."'   ";
                 $res3 = mysqli_query($conn, $sql3);
+
+               
 
                 $sql4 = "insert into j3_nrpt_transaction 
                 select * from j3_nrpt WHERE SUBSTRING(UNIT_ACM_ID, 1, 2) LIKE  '".substr($_POST["UNIT_ACM_ID"] , 0, 2)."'   ";
@@ -215,11 +217,69 @@
                 $sql1 = "insert into j3_rost
                 select * from j3_rost_transaction WHERE 1  ";
                 $res = mysqli_query($conn, $sql1);
-
-
-
-                
                 // echo json_encode($sql);
+            break;
+            case 'process':
+                include 'connect.php';
+                
+
+                $sql_j3_unit_acm_old = "SELECT * FROM `j3_unit_acm` WHERE SUBSTRING(UNIT_ACM_ID, 1, 4) LIKE  '".substr($_POST["UNIT_CODE"] , 0, 4)."' ";
+                $res = mysqli_query($conn, $sql_j3_unit_acm_old);
+                $j3_unit_acm_old = mysqli_fetch_assoc($res);
+
+
+                $sql_find_max_unit_acm_id = "SELECT MAX( SUBSTRING(UNIT_ACM_ID, 1, 4)) AS max_unit_acm_id   FROM `j3_unit_acm` WHERE PART_ID = '".$_POST["PART_ID"]."' ";
+                $res = mysqli_query($conn, $sql_find_max_unit_acm_id);
+                $result = mysqli_fetch_assoc($res);
+                $max_unit_acm_id = $result["max_unit_acm_id"];
+                $new_unit_acm_id = ($max_unit_acm_id+1).'0'.substr($_POST["UNIT_CODE"] , 5 , 10) ;
+
+                $sql_insert_j3_unit_acm = "INSERT INTO `j3_unit_acm` (UNIT_ACM_ID, UNIT_NAME, UNIT_ACM_NAME, PART_ID) 
+                VALUES($new_unit_acm_id, '".$_POST["UNIT_NAME"]."', '".$_POST["UNIT_NAME_ACK"]."', '".$_POST["PART_ID"]."'  ) ";
+                $res = mysqli_query($conn, $sql_insert_j3_unit_acm);
+
+
+
+                $sql_j3_rost = "SELECT * FROM `j3_rost` WHERE ROST_NUNIT LIKE '".$_POST["UNIT_CODE"]."' ";
+                $res = mysqli_query($conn, $sql_j3_rost);
+                while($row = mysqli_fetch_assoc($res)) {
+                    $ROST_UNIT = substr( $new_unit_acm_id , 0 , 5).substr( $row["ROST_UNIT"] , 5 , 10);
+                    $ROST_CPOS = $row["ROST_CPOS"];
+                    $ROST_POSNAME = $row["ROST_POSNAME"];
+                    $ROST_POSNAME_ACM = $row["ROST_POSNAME_ACM"];
+                    $ROST_RANK = $row["ROST_RANK"];
+                    $ROST_RANKNAME = $row["ROST_RANKNAME"];
+                    $ROST_LAO_MAJ = $row["ROST_LAO_MAJ"];
+                    $ROST_NCPOS12 = $row["ROST_NCPOS12"];
+                    $ROST_ID = NULL;
+                    $ROST_PARENT = substr( $new_unit_acm_id , 0 , 5).substr( $row["ROST_PARENT"] , 5 , 10);
+                    $ROST_NUNIT = substr( $new_unit_acm_id , 0 , 5).substr( $row["ROST_NUNIT"] , 5 , 10);
+                    $ROST_NPARENT = substr( $new_unit_acm_id , 0 , 5).substr( $row["ROST_NPARENT"] , 5 , 10);
+                    $STATUS = $row["STATUS"];
+
+
+
+                    $sql_insert_j3_rost = "INSERT INTO `j3_rost` 
+                    (`ROST_UNIT`, `ROST_CPOS`, `ROST_POSNAME`, `ROST_POSNAME_ACM`, `ROST_RANK`, `ROST_RANKNAME`, `ROST_LAO_MAJ`, `ROST_NCPOS12`, `ROST_ID`, `ROST_PARENT`, `ROST_NUNIT`, `ROST_NPARENT`, `STATUS`) 
+                    VALUES ('".$ROST_UNIT."', '".$ROST_CPOS."', '".$ROST_POSNAME."', '".$ROST_POSNAME_ACM."', '".$ROST_RANK."', '".$ROST_RANKNAME."', '".$ROST_LAO_MAJ."', '".$ROST_NCPOS12."', NULL, '".$ROST_PARENT."', '".$ROST_NUNIT."', '".$ROST_NPARENT."', '".$STATUS."')";
+                    $result = mysqli_query($conn, $sql_insert_j3_rost);
+
+                }
+                
+
+
+
+
+
+
+                $sql_insert_j3_rost = "INSERT INTO `j3_rost` 
+                SELECT * FROM `j3_rost_transaction` ";
+                $res = mysqli_query($conn, $sql_insert_j3_rost);
+
+
+                echo json_encode($sql_upadate_3_rost_transaction);
+
+
             break;
         }
     }
