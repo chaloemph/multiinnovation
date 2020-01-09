@@ -225,6 +225,7 @@
                 // echo json_encode($_POST);
                 // die();
                 
+                $index = $_POST["index"];
                 
 
                 $sql_j3_unit_acm_old = "SELECT * FROM `j3_unit_acm` WHERE SUBSTRING(UNIT_ACM_ID, 1, 4) LIKE  '".substr($_POST["UNIT_CODE"] , 0, 4)."' ";
@@ -241,6 +242,22 @@
                 $sql_insert_j3_unit_acm = "INSERT INTO `j3_unit_acm` (UNIT_ACM_ID, UNIT_NAME, UNIT_ACM_NAME, PART_ID) 
                 VALUES($new_unit_acm_id, '".$_POST["UNIT_NAME"]."', '".$_POST["UNIT_NAME_ACK"]."', '".$_POST["PART_ID"]."'  ) ";
                 $res = mysqli_query($conn, $sql_insert_j3_unit_acm);
+
+
+                $sql = "SELECT * FROM `j3_unit_acm` WHERE PART_ID = '".$_POST["PART_ID"]."' AND UNIT_ACM_ID != $new_unit_acm_id  ";
+                $res = mysqli_query($conn , $sql);
+                $c = 0;
+                while ($result = mysqli_fetch_assoc($res)) {
+                    $c+=1;
+                    if ($c == $index){
+                        $c+=1;
+                    }
+                    $sql_update = "UPDATE `j3_unit_acm` SET SORT = $c WHERE  UNIT_ACM_ID LIKE  '".$result["UNIT_ACM_ID"]."'   ";
+                    $re = mysqli_query($conn , $sql_update);
+                }
+
+                $sql_update = "UPDATE `j3_unit_acm` SET SORT = $index WHERE  UNIT_ACM_ID LIKE  '".$new_unit_acm_id."'   ";
+                $re = mysqli_query($conn , $sql_update);
 
 
 
@@ -271,10 +288,44 @@
                 }
 
 
-                $sql_insert_j3_nrpt = "INSERT INTO `j3_nrpt` (`UNIT_CODE`, `NRPT_NAME`, `NRPT_ACM`, `NRPT_NUNIT`, `NRPT_NPAGE`, `NRPT_DMYUPD`, `NRPT_UNIT_PARENT`, `NRPT_USER`, `UNIT_ACM_ID`, `STATUS`) VALUES ('".$new_unit_acm_id."', '".$_POST["UNIT_NAME"]."', '".$_POST["UNIT_NAME_ACK"]."', '".$new_unit_acm_id."', '', current_timestamp(), '', '', '".$new_unit_acm_id."', '1')";
+                // $sql_insert_j3_nrpt = "INSERT INTO `j3_nrpt` (`UNIT_CODE`, `NRPT_NAME`, `NRPT_ACM`, `NRPT_NUNIT`, `NRPT_NPAGE`, `NRPT_DMYUPD`, `NRPT_UNIT_PARENT`, `NRPT_USER`, `UNIT_ACM_ID`, `STATUS`) VALUES ('".$new_unit_acm_id."', '".$_POST["UNIT_NAME"]."', '".$_POST["UNIT_NAME_ACK"]."', '".$new_unit_acm_id."', '', current_timestamp(), '', '', '".$new_unit_acm_id."', '1')";
 
-                $res = mysqli_query($conn, $sql_insert_j3_nrpt);
+                // $res = mysqli_query($conn, $sql_insert_j3_nrpt);
 
+                $sql_find_part_number = "SELECT PART_NUMBER  FROM `j3_part` WHERE PART_ID = '".$_POST["PART_ID"]."' ";
+                $res = mysqli_query($conn, $sql_find_part_number);
+                $result = mysqli_fetch_assoc($res);
+                $PART_NUMBER = $result["PART_NUMBER"];
+
+                $sql_update_main_j3_nrpt = "UPDATE `j3_nrpt` SET 
+                 NRPT_NAME = '".$_POST["UNIT_NAME"]."'  ,
+                 NRPT_ACM = '".$_POST["UNIT_NAME_ACK"]."'  ,
+                 UNIT_CODE = Replace(UNIT_CODE , Substring(UNIT_CODE, 1, 5), ".substr( $new_unit_acm_id , 0 , 5)." ) ,
+                NRPT_NUNIT = Replace(NRPT_NUNIT , Substring(NRPT_NUNIT, 1, 5), ".substr( $new_unit_acm_id , 0 , 5)." ) ,
+                NRPT_UNIT_PARENT = '".$PART_NUMBER."' ,
+                UNIT_ACM_ID = Replace(UNIT_ACM_ID , Substring(UNIT_ACM_ID, 1, 5), ".substr( $new_unit_acm_id , 0 , 5)." ) 
+                 WHERE UNIT_CODE LIKE '".$_POST["UNIT_CODE"]."'
+                 ";
+
+                //  echo json_encode($sql_update_main_j3_nrpt);
+
+                $res = mysqli_query($conn, $sql_update_main_j3_nrpt);
+
+                $sql_update_j3_nrpt = "UPDATE `j3_nrpt` SET
+                UNIT_CODE = Replace(UNIT_CODE , Substring(UNIT_CODE, 1, 5), ".substr( $new_unit_acm_id , 0 , 5)." ) ,
+                NRPT_NUNIT = Replace(NRPT_NUNIT , Substring(NRPT_NUNIT, 1, 5), ".substr( $new_unit_acm_id , 0 , 5)." ) ,
+                NRPT_UNIT_PARENT = Replace(NRPT_UNIT_PARENT , Substring(NRPT_UNIT_PARENT, 1, 5), ".substr( $new_unit_acm_id , 0 , 5)." ) ,
+                UNIT_ACM_ID = Replace(UNIT_ACM_ID , Substring(UNIT_ACM_ID, 1, 5), ".substr( $new_unit_acm_id , 0 , 5)." ) 
+                WHERE SUBSTRING(NRPT_UNIT_PARENT, 1, 5) LIKE '".substr($_POST["UNIT_CODE"] , 0, 5)."'
+                 ";
+                 $res = mysqli_query($conn, $sql_update_j3_nrpt);
+
+                 
+
+
+
+
+                
 
                 $sql_insert_j3_ack = "INSERT INTO `j3_ack` (`ACK_NUM_ID`, `ACK_ID`, `ACK_MISSION`, 
                 
@@ -302,7 +353,7 @@
                 while($row = mysqli_fetch_assoc($res)) {
                     $sql_insert_j3_ratepersonal = "INSERT INTO `j3_ratepersonal` (`RATE_P_NUM`, `ROST_CPOS`, `EXPERT_MIL_ID`, `RATE_P_REMARK` , `RATE_P_RANK`, `SALARY_ID`, `ACK_ID`, `RATE_P_VERSION`, `ROST_ID` , `RATE_P_NUMBER`) VALUES (NULL, '".$row["ROST_CPOS"]."', '', '', '".$row["ROST_RANK"]."', '', '".$_POST["ACK_ID"]."', '1', '".$row["ROST_ID"]."' , 1)";
                     $result = mysqli_query($conn, $sql_insert_j3_ratepersonal);
-                    echo json_encode($result);
+                    // echo json_encode($result);
 
                 }
 
