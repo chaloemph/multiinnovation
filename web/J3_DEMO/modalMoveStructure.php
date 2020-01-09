@@ -63,17 +63,20 @@ $("form.moveStructure").submit(function (e) {
             <span class="sr-only">Loading...</span>
             </div>
         `
-        // modalBody.empty()
-        // modalBody.html(spinner).addClass('text-center')
+        modalBody.empty()
+        modalBody.html(spinner).addClass('text-center')
 
 
         $.ajax({
           type: "POST",
           url: "unit_structure_query.php",
           data: formdata+"&do=process",
-        //   dataType: "json",
+          dataType: "json",
           success: function (response) {
             console.log(response)
+            alert('ย้ายโครงสร้างเรียบร้อยแล้ว')
+									location.reload();
+
 
             // $.ajax({
 						// 		type: "POST",

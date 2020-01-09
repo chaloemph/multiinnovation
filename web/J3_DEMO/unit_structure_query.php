@@ -243,6 +243,8 @@
                 VALUES($new_unit_acm_id, '".$_POST["UNIT_NAME"]."', '".$_POST["UNIT_NAME_ACK"]."', '".$_POST["PART_ID"]."'  ) ";
                 $res = mysqli_query($conn, $sql_insert_j3_unit_acm);
 
+                // echo json_encode($sql_insert_j3_unit_acm);
+
 
                 $sql = "SELECT * FROM `j3_unit_acm` WHERE PART_ID = '".$_POST["PART_ID"]."' AND UNIT_ACM_ID != $new_unit_acm_id  ";
                 $res = mysqli_query($conn , $sql);
@@ -358,7 +360,7 @@
                 }
 
 
-
+                echo json_encode('success');
                 
 
                 
