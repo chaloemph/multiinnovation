@@ -250,7 +250,7 @@ if($num > 0){
 
             $sql_update_j3_rost_approve = "UPDATE `j3_rost_approve` SET 
              ROST_UNIT = Replace(ROST_UNIT , Substring(ROST_UNIT, 1, 5), ".substr( $_POST["UNIT_NAME2"] , 0 , 5)." )  ,
-             ROST_PARENT = Replace(ROST_PARENT , Substring(ROST_PARENT, 1, 5), ".substr( $_POST["UNIT_NAME2"] , 0 , 5)." )  ,
+             ROST_PARENT = Replace(ROST_PARENT , Substring(ROST_PARENT, 1, 4), ".substr( $_POST["UNIT_NAME2"] , 0 , 4)." )  ,
              ROST_NUNIT = Replace(ROST_NUNIT , Substring(ROST_NUNIT, 1, 5), ".substr( $_POST["UNIT_NAME2"] , 0 , 5)." )  ,
              ROST_NPARENT = Replace(ROST_NPARENT , Substring(ROST_NPARENT, 1, 5), ".substr( $_POST["UNIT_NAME2"] , 0 , 5)." ) ,
              ROST_POSNAME = REPLACE(ROST_POSNAME, '".$_POST["UNIT_NAME_OLD"]."', '".$_POST["UNIT_NAME"]."') ,
