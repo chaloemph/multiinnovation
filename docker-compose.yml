@@ -22,6 +22,7 @@ services:
   db:
     image: mariadb:10.3
     command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
+    command: --max_allowed_packet=32505856      # Set max_allowed_packet to 256M (or any other value)
     environment:
       - MYSQL_DATABASE=flarum
       - MYSQL_USER=rtarf
@@ -29,6 +30,7 @@ services:
       - MYSQL_ROOT_PASSWORD=root
     volumes:
       - ./flarum-db:/var/lib/mysql
+      - ./uploads.ini:/usr/local/etc/php/conf.d/php-phpmyadmin.ini
     restart: unless-stopped
   #phpmyadmin
   pma:
