@@ -25,6 +25,7 @@ $ACK_EXPLANATION = $_POST['ACK_EXPLANATION'];
 $ACK_SUMMARY = $_POST['ACK_SUMMARY'];
 $ACK_VERSION = $_POST['ACK_VERSION'];
 $UNIT_ACM_ID = $_POST['UNIT_ACM_ID'];
+$UNIT_ACM_CREATE = $_POST['UNIT_ACM_CREATE'];
 
 $check = "SELECT UNIT_CODE FROM j3_nrpt WHERE UNIT_CODE = '".$UNIT_NAME2."'";
 $result = mysqli_query($conn, $check) or die(mysqli_error());
@@ -37,10 +38,10 @@ if($num > 0){
     echo "</script>";
 }else{
 
-    $sql1 = "INSERT INTO  j3_ack(ACK_NUM_ID,ACK_ID,ACK_NAME,UNIT_CODE,UNIT_NAME,UNIT_NAME_ACK,UNIT_CODE_PARENT,ACK_TIMESTAMP,       ACK_ESSENCE,ACK_USER,ACK_MISSION,ACK_DISTRIBUTION,ACK_SCOPE,ACK_DIVISION,ACK_EXPLANATION,ACK_SUMMARY,ACK_VERSION) 
+    $sql1 = "INSERT INTO  j3_ack(ACK_NUM_ID,ACK_ID,ACK_NAME,UNIT_CODE,UNIT_NAME,UNIT_NAME_ACK,UNIT_CODE_PARENT,ACK_TIMESTAMP,ACK_ESSENCE,ACK_USER,ACK_MISSION,ACK_DISTRIBUTION,ACK_SCOPE,ACK_DIVISION,ACK_EXPLANATION,ACK_SUMMARY,ACK_VERSION,UNIT_ACM_CREATE) 
     VALUES (NULL,'$ACK_ID','$ACK_NAME','$UNIT_NAME2','$UNIT_NAME','$UNIT_NAME_ACK','$UNIT_CODE_PARENT',
     current_timestamp(),'$ACK_ESSENCE','$ACK_USER','$ACK_MISSION','$ACK_DISTRIBUTION','$ACK_SCOPE',
-    '$ACK_DIVISION','$ACK_EXPLANATION','$ACK_SUMMARY','$ACK_VERSION')";
+    '$ACK_DIVISION','$ACK_EXPLANATION','$ACK_SUMMARY','$ACK_VERSION', '$UNIT_ACM_CREATE')";
     $result2 = mysqli_query($conn, $sql1) or die ("Error in query: $sql1 " . mysqli_error()); 
 
     $ACK_NUM_ID = mysqli_insert_id($conn);
@@ -73,14 +74,14 @@ if($num > 0){
                     $ROST_RANKNAME = $row["ROST_RANKNAME"];
                     $ROST_LAO_MAJ = $row["ROST_LAO_MAJ"];
                     $ROST_NCPOS12 = $row["ROST_NCPOS12"];
-                    $ROST_ID = NULL;
+                    $ROST_ID = $row["ROST_ID"];
                     $ROST_PARENT = $row["ROST_PARENT"];
                     $ROST_NUNIT = $row["ROST_NUNIT"];
                     $ROST_NPARENT = $row["ROST_NPARENT"];
                     $STATUS = $row["STATUS"];
                     $sql_insert_j3_rost = "INSERT INTO `j3_rost_approve` 
-                    (`ROST_UNIT`, `ROST_CPOS`, `ROST_POSNAME`, `ROST_POSNAME_ACM`, `ROST_RANK`, `ROST_RANKNAME`, `ROST_LAO_MAJ`, `ROST_NCPOS12`, `ROST_ID`, `ROST_PARENT`, `ROST_NUNIT`, `ROST_NPARENT`, `STATUS`) 
-                    VALUES ('".$ROST_UNIT."', '".$ROST_CPOS."', '".$ROST_POSNAME."', '".$ROST_POSNAME_ACM."', '".$ROST_RANK."', '".$ROST_RANKNAME."', '".$ROST_LAO_MAJ."', '".$ROST_NCPOS12."', NULL, '".$ROST_PARENT."', '".$ROST_NUNIT."', '".$ROST_NPARENT."', '".$STATUS."')";
+                    (`ROST_UNIT`, `ROST_CPOS`, `ROST_POSNAME`, `ROST_POSNAME_ACM`, `ROST_RANK`, `ROST_RANKNAME`, `ROST_LAO_MAJ`, `ROST_NCPOS12`, `ROST_ID`, `ROST_PARENT`, `ROST_NUNIT`, `ROST_NPARENT`, `STATUS` , `VERSION`) 
+                    VALUES ('".$ROST_UNIT."', '".$ROST_CPOS."', '".$ROST_POSNAME."', '".$ROST_POSNAME_ACM."', '".$ROST_RANK."', '".$ROST_RANKNAME."', '".$ROST_LAO_MAJ."', '".$ROST_NCPOS12."', $ROST_ID, '".$ROST_PARENT."', '".$ROST_NUNIT."', '".$ROST_NPARENT."', '".$STATUS."' , '$ACK_VERSION')";
                     $result = mysqli_query($conn, $sql_insert_j3_rost)  or die(mysqli_error());
                 }
 
@@ -141,14 +142,14 @@ if($num > 0){
                     $ROST_RANKNAME = $row["ROST_RANKNAME"];
                     $ROST_LAO_MAJ = $row["ROST_LAO_MAJ"];
                     $ROST_NCPOS12 = $row["ROST_NCPOS12"];
-                    $ROST_ID = NULL;
+                    $ROST_ID = $row["ROST_ID"];
                     $ROST_PARENT = $row["ROST_PARENT"];
                     $ROST_NUNIT = $row["ROST_NUNIT"];
                     $ROST_NPARENT = $row["ROST_NPARENT"];
                     $STATUS = $row["STATUS"];
                     $sql_insert_j3_rost = "INSERT INTO `j3_rost_approve` 
-                    (`ROST_UNIT`, `ROST_CPOS`, `ROST_POSNAME`, `ROST_POSNAME_ACM`, `ROST_RANK`, `ROST_RANKNAME`, `ROST_LAO_MAJ`, `ROST_NCPOS12`, `ROST_ID`, `ROST_PARENT`, `ROST_NUNIT`, `ROST_NPARENT`, `STATUS`) 
-                    VALUES ('".$ROST_UNIT."', '".$ROST_CPOS."', '".$ROST_POSNAME."', '".$ROST_POSNAME_ACM."', '".$ROST_RANK."', '".$ROST_RANKNAME."', '".$ROST_LAO_MAJ."', '".$ROST_NCPOS12."', NULL, '".$ROST_PARENT."', '".$ROST_NUNIT."', '".$ROST_NPARENT."', '".$STATUS."')";
+                    (`ROST_UNIT`, `ROST_CPOS`, `ROST_POSNAME`, `ROST_POSNAME_ACM`, `ROST_RANK`, `ROST_RANKNAME`, `ROST_LAO_MAJ`, `ROST_NCPOS12`, `ROST_ID`, `ROST_PARENT`, `ROST_NUNIT`, `ROST_NPARENT`, `STATUS`, `VERSION`) 
+                    VALUES ('".$ROST_UNIT."', '".$ROST_CPOS."', '".$ROST_POSNAME."', '".$ROST_POSNAME_ACM."', '".$ROST_RANK."', '".$ROST_RANKNAME."', '".$ROST_LAO_MAJ."', '".$ROST_NCPOS12."', $ROST_ID, '".$ROST_PARENT."', '".$ROST_NUNIT."', '".$ROST_NPARENT."', '".$STATUS."' , '$ACK_VERSION')";
                     $result = mysqli_query($conn, $sql_insert_j3_rost)  or die(mysqli_error());
                 }
 
@@ -209,14 +210,14 @@ if($num > 0){
                     $ROST_RANKNAME = $row["ROST_RANKNAME"];
                     $ROST_LAO_MAJ = $row["ROST_LAO_MAJ"];
                     $ROST_NCPOS12 = $row["ROST_NCPOS12"];
-                    $ROST_ID = NULL;
+                    $ROST_ID = $row["ROST_ID"];
                     $ROST_PARENT = $row["ROST_PARENT"];
                     $ROST_NUNIT = $row["ROST_NUNIT"];
                     $ROST_NPARENT = $row["ROST_NPARENT"];
                     $STATUS = $row["STATUS"];
                     $sql_insert_j3_rost = "INSERT INTO `j3_rost_approve` 
-                    (`ROST_UNIT`, `ROST_CPOS`, `ROST_POSNAME`, `ROST_POSNAME_ACM`, `ROST_RANK`, `ROST_RANKNAME`, `ROST_LAO_MAJ`, `ROST_NCPOS12`, `ROST_ID`, `ROST_PARENT`, `ROST_NUNIT`, `ROST_NPARENT`, `STATUS`) 
-                    VALUES ('".$ROST_UNIT."', '".$ROST_CPOS."', '".$ROST_POSNAME."', '".$ROST_POSNAME_ACM."', '".$ROST_RANK."', '".$ROST_RANKNAME."', '".$ROST_LAO_MAJ."', '".$ROST_NCPOS12."', NULL, '".$ROST_PARENT."', '".$ROST_NUNIT."', '".$ROST_NPARENT."', '".$STATUS."')";
+                    (`ROST_UNIT`, `ROST_CPOS`, `ROST_POSNAME`, `ROST_POSNAME_ACM`, `ROST_RANK`, `ROST_RANKNAME`, `ROST_LAO_MAJ`, `ROST_NCPOS12`, `ROST_ID`, `ROST_PARENT`, `ROST_NUNIT`, `ROST_NPARENT`, `STATUS` , `VERSION`) 
+                    VALUES ('".$ROST_UNIT."', '".$ROST_CPOS."', '".$ROST_POSNAME."', '".$ROST_POSNAME_ACM."', '".$ROST_RANK."', '".$ROST_RANKNAME."', '".$ROST_LAO_MAJ."', '".$ROST_NCPOS12."', $ROST_ID, '".$ROST_PARENT."', '".$ROST_NUNIT."', '".$ROST_NPARENT."', '".$STATUS."', '$ACK_VERSION')";
                     $result = mysqli_query($conn, $sql_insert_j3_rost)  or die(mysqli_error());
                 }
 
@@ -276,14 +277,14 @@ if($num > 0){
                     $ROST_RANKNAME = $row["ROST_RANKNAME"];
                     $ROST_LAO_MAJ = $row["ROST_LAO_MAJ"];
                     $ROST_NCPOS12 = $row["ROST_NCPOS12"];
-                    $ROST_ID = NULL;
+                    $ROST_ID = $row["ROST_ID"];
                     $ROST_PARENT = $row["ROST_PARENT"];
                     $ROST_NUNIT = $row["ROST_NUNIT"];
                     $ROST_NPARENT = $row["ROST_NPARENT"];
                     $STATUS = $row["STATUS"];
                     $sql_insert_j3_rost = "INSERT INTO `j3_rost_approve` 
-                    (`ROST_UNIT`, `ROST_CPOS`, `ROST_POSNAME`, `ROST_POSNAME_ACM`, `ROST_RANK`, `ROST_RANKNAME`, `ROST_LAO_MAJ`, `ROST_NCPOS12`, `ROST_ID`, `ROST_PARENT`, `ROST_NUNIT`, `ROST_NPARENT`, `STATUS`) 
-                    VALUES ('".$ROST_UNIT."', '".$ROST_CPOS."', '".$ROST_POSNAME."', '".$ROST_POSNAME_ACM."', '".$ROST_RANK."', '".$ROST_RANKNAME."', '".$ROST_LAO_MAJ."', '".$ROST_NCPOS12."', NULL, '".$ROST_PARENT."', '".$ROST_NUNIT."', '".$ROST_NPARENT."', '".$STATUS."')";
+                    (`ROST_UNIT`, `ROST_CPOS`, `ROST_POSNAME`, `ROST_POSNAME_ACM`, `ROST_RANK`, `ROST_RANKNAME`, `ROST_LAO_MAJ`, `ROST_NCPOS12`, `ROST_ID`, `ROST_PARENT`, `ROST_NUNIT`, `ROST_NPARENT`, `STATUS`, `VERSION`) 
+                    VALUES ('".$ROST_UNIT."', '".$ROST_CPOS."', '".$ROST_POSNAME."', '".$ROST_POSNAME_ACM."', '".$ROST_RANK."', '".$ROST_RANKNAME."', '".$ROST_LAO_MAJ."', '".$ROST_NCPOS12."', $ROST_ID, '".$ROST_PARENT."', '".$ROST_NUNIT."', '".$ROST_NPARENT."', '".$STATUS."' , '$ACK_VERSION')";
                     $result = mysqli_query($conn, $sql_insert_j3_rost)  or die(mysqli_error());
                 }
 
@@ -333,14 +334,14 @@ if($num > 0){
                     $ROST_RANKNAME = $row["ROST_RANKNAME"];
                     $ROST_LAO_MAJ = $row["ROST_LAO_MAJ"];
                     $ROST_NCPOS12 = $row["ROST_NCPOS12"];
-                    $ROST_ID = NULL;
+                    $ROST_ID = $row["ROST_ID"];
                     $ROST_PARENT = $row["ROST_PARENT"];
                     $ROST_NUNIT = $row["ROST_NUNIT"];
                     $ROST_NPARENT = $row["ROST_NPARENT"];
                     $STATUS = $row["STATUS"];
                     $sql_insert_j3_rost = "INSERT INTO `j3_rost_approve` 
-                    (`ROST_UNIT`, `ROST_CPOS`, `ROST_POSNAME`, `ROST_POSNAME_ACM`, `ROST_RANK`, `ROST_RANKNAME`, `ROST_LAO_MAJ`, `ROST_NCPOS12`, `ROST_ID`, `ROST_PARENT`, `ROST_NUNIT`, `ROST_NPARENT`, `STATUS`) 
-                    VALUES ('".$ROST_UNIT."', '".$ROST_CPOS."', '".$ROST_POSNAME."', '".$ROST_POSNAME_ACM."', '".$ROST_RANK."', '".$ROST_RANKNAME."', '".$ROST_LAO_MAJ."', '".$ROST_NCPOS12."', NULL, '".$ROST_PARENT."', '".$ROST_NUNIT."', '".$ROST_NPARENT."', '".$STATUS."')";
+                    (`ROST_UNIT`, `ROST_CPOS`, `ROST_POSNAME`, `ROST_POSNAME_ACM`, `ROST_RANK`, `ROST_RANKNAME`, `ROST_LAO_MAJ`, `ROST_NCPOS12`, `ROST_ID`, `ROST_PARENT`, `ROST_NUNIT`, `ROST_NPARENT`, `STATUS`, `VERSION`) 
+                    VALUES ('".$ROST_UNIT."', '".$ROST_CPOS."', '".$ROST_POSNAME."', '".$ROST_POSNAME_ACM."', '".$ROST_RANK."', '".$ROST_RANKNAME."', '".$ROST_LAO_MAJ."', '".$ROST_NCPOS12."', $ROST_ID, '".$ROST_PARENT."', '".$ROST_NUNIT."', '".$ROST_NPARENT."', '".$STATUS."', '$ACK_VERSION')";
                     $result = mysqli_query($conn, $sql_insert_j3_rost)  or die(mysqli_error());
                 }
 
