@@ -1,10 +1,6 @@
 <?php
-
 include ('connectpdo.php');
-
 $ACK_NUM_ID = $_GET['id'];
-
-
 $sql ="SELECT * FROM j3_ack WHERE ACK_NUM_ID = :ACK_NUM_ID";
 $stmt=$db->prepare($sql);
 $stmt->bindparam(':ACK_NUM_ID',$ACK_NUM_ID);
@@ -28,14 +24,18 @@ $UNIT_CODE_PARENT = $row['UNIT_CODE_PARENT'];
 $ACK_TIMESTAMP = $row['ACK_TIMESTAMP'];
 $ACK_STS = $row['ACK_STS'];
 $ACK_VERSION = $row['ACK_VERSION'];
-
 $sql1 = "SELECT NRPT_ACM FROM j3_nrpt WHERE UNIT_CODE = :UNIT_CODE_PARENT";
 $stmt1=$db->prepare($sql1);
 $stmt1->bindparam(':UNIT_CODE_PARENT',$UNIT_CODE_PARENT);
 $stmt1->execute();
 $row1=$stmt1->fetch(PDO::FETCH_ASSOC);
 $ACM_PARENT = $row1['NRPT_ACM'];
-
+$sql2 = "SELECT NRPT_UNIT_PARENT FROM j3_nrpt_approve WHERE UNIT_CODE = :UNIT_CODE";
+$stmt2=$db->prepare($sql2);
+$stmt2->bindparam(':UNIT_CODE',$UNIT_CODE);
+$stmt2->execute();
+$row2=$stmt2->fetch(PDO::FETCH_ASSOC);
+$NRPT_UNIT_PARENT_1 = $row2['NRPT_UNIT_PARENT'];
 ?>
 
 <!DOCTYPE html>
@@ -55,6 +55,62 @@ $ACM_PARENT = $row1['NRPT_ACM'];
 			<div class="main-content">
 				<div class="container-fluid">
 					<div class="row">
+						<div class="col-md-12"><br>
+							<div class="card">
+								<div class="card-body">
+									<table id="example1" class="table table-bordered table-striped">
+							            <thead class="bg-secondary">
+							              <tr>
+							                <th style="text-align: center;">หมายเลขหน่วย</th>
+							                <th style="text-align: center;">หมายเลขหน่วยหลัก</th>
+							                <th>นามหน่วย</th>
+							                <th>นามหน่วยย่อ</th>
+							                <th><i class="fas fa-cogs nav-icon"></i></th>
+							              </tr>
+							            </thead>
+							            <tbody>
+							              <?php
+							              $sql = "SELECT * FROM j3_nrpt_approve WHERE UNIT_ACM_ID = :UNIT_CODE OR NRPT_UNIT_PARENT = :UNIT_CODE OR UNIT_CODE=:UNIT_CODE";
+							              $stmt=$db->prepare($sql);
+							              $stmt->bindparam(':UNIT_CODE',$UNIT_CODE);
+							              $stmt->execute();
+							              while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
+							               $UNIT_CODE = $row['UNIT_CODE'];
+							               $NRPT_NAME = $row['NRPT_NAME'];
+							               $NRPT_ACM = $row['NRPT_ACM'];
+							               $NRPT_NUNIT = $row['NRPT_NUNIT'];
+							               $NRPT_NPAGE = $row['NRPT_NPAGE'];
+							               $NRPT_DMYUPD = $row['NRPT_DMYUPD'];
+							               $NRPT_UNIT_PARENT = $row['NRPT_UNIT_PARENT'];
+							               $NRPT_USER = $row['NRPT_USER'];
+							               $UNIT_ACM_ID = $row['UNIT_ACM_ID'];
+							               ?>
+							               <tr>
+							                <td style="width: 160px; text-align: center;"><?=$UNIT_CODE?></td>
+							                <td style="width: 170px; text-align: center;"><?=$NRPT_UNIT_PARENT?></td>
+							                <td style="width: 500px;"><?=$NRPT_NAME?></td>
+							                <td style="width: 180px;"><?=$NRPT_ACM?></td>
+							                <td style="width: 220px; text-align: center;">
+							                  <a class="btn btn-info btn-sm" href="detail_ack.php?id=<?=$UNIT_CODE;?>&name=<?=$UNIT_CODE;?>&nickname=<?=$UNIT_CODE;?>&lastname=<?=$UNIT_CODE?>">
+							                    <i class="fas fa-pencil-alt">
+							                    </i>
+							                    DETAIL
+							                  </a>
+							                  <a class="btn btn-danger btn-sm" href="delete_data.php?id=<?=$UNIT_CODE?>">
+							                    <i class="fas fa-trash">
+							                    </i>
+							                    DELETE
+							                  </a>
+							                </td>
+							              </tr>
+							            <?php } ?>
+
+							            
+							          </tbody>
+							        </table>
+								</div>
+							</div>
+						</div>		
 						<div class="col-md-12">
 							<div class="card">
 								<div class="card-body">
@@ -65,7 +121,6 @@ $ACM_PARENT = $row1['NRPT_ACM'];
 									<button class="tablink" onmouseover="openPage('About', this, 'white')" ><font style="font-weight: bold; font-size: 18px;">อัตรายุทโธปกรณ์</font></button>
 									
 									<?php
-
 									$sql2 = "SELECT ACK_MISSION,ACK_DISTRIBUTION,ACK_SCOPE,ACK_DIVISION,ACK_EXPLANATION FROM j3_ack WHERE ACK_NUM_ID = :ACK_NUM_ID";
 									$stmt2=$db->prepare($sql2);
 									$stmt2->bindparam(':ACK_NUM_ID',$ACK_NUM_ID); 
@@ -79,6 +134,8 @@ $ACM_PARENT = $row1['NRPT_ACM'];
 									?>
 
 									<div id="Home" class="tabcontent">
+										<a href="export_word.php?id=<?=$ACK_NUM_ID?>"><button type="button" class="btn btn-primary"><i class="fas fa-file-word"></i> WORD</button></a>
+										<a href="report_ack.php?id=<?=$ACK_NUM_ID?>"><button type="button" class="btn btn-danger"><i class="fas fa-file-pdf"></i> PDF</button></a><br><br>
 										<div class="form-group">
 											<label for="exampleTextarea1"><font style="font-weight: bold; font-size: 18px;">ภารกิจ :</font></label>
 											<textarea class="form-control" id="editor" rows="4" name="ACK_MISSION" style="border-width:1px; border-color: gray; font-weight: bold; font-size: 18px;" DISABLED><?=$ACK_M?></textarea>
@@ -98,19 +155,15 @@ $ACM_PARENT = $row1['NRPT_ACM'];
 									</div>
 
 									<div id="Sturc" class="tabcontent">
-										<a href="report_2.php?id=<?=$UNIT_CODE?>&id2=<?=$ACK_NUM_ID?>"><button type="button" class="btn btn-success"><i class="fas fa-file-pdf"></i> Print</button></a>
+										<a href="report_2.php?id=<?=$UNIT_CODE?>&id2=<?=$ACK_NUM_ID?>"><button type="button" class="btn btn-danger"><i class="fas fa-file-pdf"></i> Print</button></a>
 										<div style="text-align: center;">
 											<?php
-
 											$sql6 = "SELECT * FROM j3_nrpt WHERE UNIT_CODE = :UNIT_CODE" ;
 											$stmt6=$db->prepare($sql6);
 											$stmt6->bindparam(':UNIT_CODE',$UNIT_CODE);
 											$stmt6->execute();
 											$row6=$stmt6->fetch(PDO::FETCH_ASSOC);
-
 											$data = $row6['UNIT_CODE'];
-
-
 												// output data of each row
 											echo '<div class="tf-tree tf-gap-sm">
 											<ul>
@@ -120,13 +173,11 @@ $ACM_PARENT = $row1['NRPT_ACM'];
 											</span>';
 											
 											if($data == $UNIT_CODE){
-
 												$sql5 = "SELECT * FROM j3_nrpt WHERE NRPT_UNIT_PARENT = :data";
 												$stmt5=$db->prepare($sql5);
 												$stmt5->bindparam(':data',$data);
 												$stmt5->execute();
 												$row5=$stmt5->fetch(PDO::FETCH_ASSOC);
-
 												if($row5['NRPT_UNIT_PARENT']==$data){
 													echo '<ul>';
 													$stmt5->execute();
@@ -180,9 +231,10 @@ $ACM_PARENT = $row1['NRPT_ACM'];
 									</div>
 
 									<div id="News" class="tabcontent"> 
-										<a href="report_iframe_ack.php?id=<?=$UNIT_CODE;?>&name=<?=$UNIT_CODE;?>&nickname=<?=$UNIT_CODE;?>&lastname=<?=$UNIT_CODE?>&id5=<?=$ACK_NUM_ID?>"><button type="button" class="btn btn-success"><i class="fas fa-file-pdf"></i> Print</button></a>
+										<button type="button" id="link_modal" data-toggle="modal" data-target=".modalPersonal" class="btn btn-info editbtn"><i class="fas fa-plus"></i></button></a>
+										<a href="report_iframe_ack.php?id=<?=$UNIT_CODE;?>&name=<?=$UNIT_CODE;?>&nickname=<?=$UNIT_CODE;?>&lastname=<?=$UNIT_CODE?>&id5=<?=$ACK_NUM_ID?>"><button type="button" class="btn btn-danger"><i class="fas fa-file-pdf"></i> Print</button></a>
 										<div class="card-body">
-											<table id="example1" class="table table-bordered table-striped">
+											<table id="example2" class="table table-bordered table-striped">
 												<thead class="bg-blue">                                                        
 													<tr>
 														<th style="text-align: center;">เลขประจำตำแหน่ง</th>
@@ -194,9 +246,8 @@ $ACM_PARENT = $row1['NRPT_ACM'];
 												</thead>
 												<tbody>
 													<?php
-
 													include ('connectpdo.php');
-													$sql2 = "SELECT * FROM j3_ratepersonal WHERE ACK_ID = :ACK_ID";
+											/*		$sql2 = "SELECT * FROM j3_ratepersonal WHERE ACK_ID = :ACK_ID";
 													$stmt2=$db->prepare($sql2);
 													$stmt2->bindparam(':ACK_ID',$ACK_ID);
 													$stmt2->execute();
@@ -211,28 +262,47 @@ $ACM_PARENT = $row1['NRPT_ACM'];
 														$ACK_ID = $row2['ACK_ID'];
 														$RATE_P_VERSION = $row2['RATE_P_VERSION'];
 														$ROSTT_ID = $row2['ROST_ID'];
-														$ROST_OLD_ID = $row2['ROST_OLD_ID'];
-
-
-														$sql3 = "SELECT * FROM j3_rost WHERE ROST_ID = :ROSTT_ID";
+														$ROST_OLD_ID = $row2['ROST_OLD_ID'];*/
+														$sql5 ="SELECT * FROM j3_ack WHERE ACK_NUM_ID = :ACK_NUM_ID";
+														$stmt5=$db->prepare($sql5);
+														$stmt5->bindparam(':ACK_NUM_ID',$ACK_NUM_ID);
+														$stmt5->execute();
+														while($row5=$stmt5->fetch(PDO::FETCH_ASSOC)){
+														$ACK_NUM_ID = $row5['ACK_NUM_ID'];
+														$ACK_ID = $row5['ACK_ID'];
+														$ACK_MISSION = $row5['ACK_MISSION'];
+														$ACK_DISTRIBUTION = $row5['ACK_DISTRIBUTION'];
+														$ACK_ESSENCE = $row5['ACK_ESSENCE'];
+														$ACK_SCOPE = $row5['ACK_SCOPE'];
+														$ACK_DIVISION = $row5['ACK_DIVISION'];
+														$ACK_EXPLANATION = $row5['ACK_EXPLANATION'];
+														$ACK_SUMMARY = $row5['ACK_SUMMARY'];
+														$ACK_USER = $row5['ACK_USER'];
+														$ACK_NAME = $row5['ACK_NAME'];
+														$UNIT_CODE_2 = $row5['UNIT_CODE'];
+														$UNIT_NAME = $row5['UNIT_NAME'];
+														$UNIT_NAME_ACK = $row5['UNIT_NAME_ACK'];
+														$UNIT_CODE_PARENT = $row5['UNIT_CODE_PARENT'];
+														$ACK_TIMESTAMP = $row5['ACK_TIMESTAMP'];
+														$ACK_STS = $row5['ACK_STS'];
+														$ACK_VERSION = $row5['ACK_VERSION'];
+														$sql3 = "SELECT * FROM j3_rost_approve WHERE ROST_NUNIT = :UNIT_CODE_2";
 														$stmt3=$db->prepare($sql3);
-														$stmt3->bindparam(':ROSTT_ID',$ROSTT_ID);
+														$stmt3->bindparam(':UNIT_CODE_2',$UNIT_CODE_2);
 														$stmt3->execute();
-														$row3=$stmt3->fetch(PDO::FETCH_ASSOC);
-														$ROST_UNIT = $row3['ROST_UNIT'];
-														$ROST_CPOS = $row3['ROST_CPOS'];
-														$ROST_POSNAME = $row3['ROST_POSNAME'];
-														$ROST_POSNAME_ACM = $row3['ROST_POSNAME_ACM'];
-														$ROST_RANK = $row3['ROST_RANK'];
-														$ROST_RANKNAME = $row3['ROST_RANKNAME'];
-														$ROST_LAO_MAJ = $row3['ROST_LAO_MAJ'];
-														$ROST_NCPOS12 = $row3['ROST_NCPOS12'];
-														$ROST_ID = $row3['ROST_ID'];
-														$ROST_PARENT = $row3['ROST_PARENT'];	
-														$ROST_NUNIT = $row3['ROST_NUNIT'];	
-														$ROST_NPARENT = $row3['ROST_NPARENT'];
-
-
+														while($row3=$stmt3->fetch(PDO::FETCH_ASSOC)){
+															$ROST_UNIT = $row3['ROST_UNIT'];
+															$ROST_CPOS = $row3['ROST_CPOS'];
+															$ROST_POSNAME = $row3['ROST_POSNAME'];
+															$ROST_POSNAME_ACM = $row3['ROST_POSNAME_ACM'];
+															$ROST_RANK = $row3['ROST_RANK'];
+															$ROST_RANKNAME = $row3['ROST_RANKNAME'];
+															$ROST_LAO_MAJ = $row3['ROST_LAO_MAJ'];
+															$ROST_NCPOS12 = $row3['ROST_NCPOS12'];
+															$ROST_ID = $row3['ROST_ID'];
+															$ROST_PARENT = $row3['ROST_PARENT'];	
+															$ROST_NUNIT = $row3['ROST_NUNIT'];	
+															$ROST_NPARENT = $row3['ROST_NPARENT'];
 														?>
 														<tr>
 															<td style="width: 180px; text-align: center;"><?=$ROST_CPOS?></td>
@@ -246,14 +316,14 @@ $ACM_PARENT = $row1['NRPT_ACM'];
 																</div>
 															</td>
 														</tr>
-													<?php } ?>                                                             
+													<?php }} ?>                                                             
 												</tbody>
 											</table>
 										</div>
 									</div>
 
 									<div id="Contact" class="tabcontent">
-										<a href="report_4.php?id=<?=$ACK_NUM_ID?>"><button type="button" class="btn btn-success"><i class="fas fa-file-pdf"></i> Print</button></a><br>
+										<a href="report_4.php?id=<?=$ACK_NUM_ID?>"><button type="button" class="btn btn-danger"><i class="fas fa-file-pdf"></i> Print</button></a><br><br>
 										<div class="form-group">
 											<label for="exampleTextarea1"><font style="font-weight: bold; font-size: 18px;">คำชี้แจง :</font></label>
 											<textarea class="form-control" id="editor4" rows="4" name="ACK_DIVISION" style="border-width:1px; border-color: gray;font-weight: bold; font-size: 18px;" DISABLED><?=$ACK_E?></textarea>
@@ -261,7 +331,7 @@ $ACM_PARENT = $row1['NRPT_ACM'];
 									</div>
 
 									<div id="About" class="tabcontent">
-										<a href="report_5.php?id=<?=$ACK_NUM_ID;?>"><button type="button" class="btn btn-success"><i class="fas fa-file-pdf"></i> Print</button></a>
+										<a href="report_5.php?id=<?=$ACK_NUM_ID;?>"><button type="button" class="btn btn-danger"><i class="fas fa-file-pdf"></i> Print</button></a>
 										<div class="card-body">
 											<table id="example2" class="table table-bordered table-striped">
 												<thead class="bg-primary">                                                        
@@ -276,7 +346,6 @@ $ACM_PARENT = $row1['NRPT_ACM'];
 												</thead>
 												<tbody>
 													<?php
-
 													include ('connectpdo.php');
 													$sql8 = "SELECT * FROM j3_rateitem WHERE ACK_ID = :ACK_ID";
 													$stmt8=$db->prepare($sql8);
@@ -293,7 +362,6 @@ $ACM_PARENT = $row1['NRPT_ACM'];
 														$P_ID = $row8['P_ID'];
 														$RATE_I_UPD_DATE = $row8['RATE_I_UPD_DATE'];
 														$RATE_I_DEPARTMENT = $row8['RATE_I_DEPARTMENT'];
-
 														?>
 														<tr>
 															<td style="width: 140px; text-align: center;"><?=$ACK_ID?></td>
@@ -334,7 +402,7 @@ $ACM_PARENT = $row1['NRPT_ACM'];
 												</tr>
 												<tr>
 													<th class="table-primary"><font style="font-size: 18px;">หมายเลขหน่วย(ใหม่) :</font></th>
-													<td><font style="font-size: 18px; font-weight: bold;"><?=$UNIT_CODE?></font></td>
+													<td><font style="font-size: 18px; font-weight: bold;"><?=$UNIT_CODE_2?></font></td>
 												</tr>
 												<tr>
 													<th class="table-primary"><font style="font-size: 18px;">นามหน่วย(ใหม่) :</font></th>
@@ -346,7 +414,7 @@ $ACM_PARENT = $row1['NRPT_ACM'];
 												</tr>
 												<tr>
 													<th class="table-primary"><font style="font-size: 18px;">หมายเลขหน่วยหลัก :</font></th>
-													<td><font style="font-size: 18px; font-weight: bold; text-overflow: ellipsis;"><?=$UNIT_CODE_PARENT?></font></td>
+													<td><font style="font-size: 18px; font-weight: bold; text-overflow: ellipsis;"><?=$NRPT_UNIT_PARENT_1?></font></td>
 												</tr>
 												<tr>
 													<th class="table-primary"><font style="font-size: 18px;">นามหน่วยหลัก :</font></th>
@@ -373,10 +441,8 @@ $ACM_PARENT = $row1['NRPT_ACM'];
 														echo "";
 													}else if($ACK_STS=="รอการอนุมัติ"){
 														echo "
-
 														<a href='change_sts.php?id1=$ACK_NUM_ID'><button type='button' class='btn btn-icon btn-danger' style='float: right;' onClick=\"javascript:return confirm('ต้องการอนุมัติ '-'$ACK_ID'-');\" ><i class='fas fa-ban' ></i></button></a>
 														<a href='change_sts.php?id=$ACK_NUM_ID'><button type='button' class='btn btn-icon btn-success' style='float: right;' onClick=\"javascript:return confirm('ต้องการอนุมัติ '-'$ACK_ID'-');\"><i class='fas fa-check'></i></button></a>
-
 														";
 													}else{
 														echo "";
@@ -396,7 +462,6 @@ $ACM_PARENT = $row1['NRPT_ACM'];
 							<div class="card-body">
 
 								<?php
-
 								$sql5 = "SELECT ACK_SUMMARY as SUMMARY FROM j3_ack WHERE ACK_ID = :ACK_ID";
 								$stmt5=$db->prepare($sql5);
 								$stmt5->bindparam(':ACK_ID',$ACK_ID); 
@@ -414,7 +479,6 @@ $ACM_PARENT = $row1['NRPT_ACM'];
 					</div>
 
 					<div class="col-md-6">
-						<a href="report_ack.php?id=<?=$ACK_NUM_ID?>"><button type="button" class="btn btn-success" style="height: 40px; width: 150px;"><i class="ik ik-edit-2"></i>พิมพ์รายงาน</button></a>
 						<button type="button" class="btn btn-primary" style="height: 40px; width: 150px;" onclick="window.location.href='upd_ack.php?id=<?=$ACK_NUM_ID?>'"><i class="ik ik-edit-2"></i>แก้ไขข้อมูล</button>
 						<button type="button" class="btn btn-danger" style="height: 40px; width: 150px;" onclick="window.location.href='read_ack.php'"><i class="ik ik-info"></i>ย้อนกลับ</button>
 					</div>
@@ -423,6 +487,17 @@ $ACM_PARENT = $row1['NRPT_ACM'];
 		</div>
 	</div>
 </div>
+
+
+	<div class="modal fade modalPersonal" tabindex="-1" role="dialog" aria-labelledby="modalPersonalModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+
+				</div>
+			</div>
+		</div>
+	</div>
 
 <footer class="main-footer">
 	<strong>Copyright &copy; 2019 </strong>
@@ -434,16 +509,13 @@ $ACM_PARENT = $row1['NRPT_ACM'];
 </aside>
 </div>
 <style>
-
 	* {box-sizing: border-box}
-
 	/* Set height of body and the document to 100% */
 	body, html {
 		height: 100%;
 		margin: 0;
 		font-family: Arial;
 	}
-
 	/* Style tab links */
 	.tablink {
 		background-color: #87cefa;
@@ -456,11 +528,9 @@ $ACM_PARENT = $row1['NRPT_ACM'];
 		font-size: 17px;
 		width: 20%;
 	}
-
 	.tablink:hover {
 		background-color: #79CDCD;
 	}
-
 	/* Style the tab content (and add height:100% for full page content) */
 	.tabcontent {
 		color: #555;
@@ -468,9 +538,23 @@ $ACM_PARENT = $row1['NRPT_ACM'];
 		padding: 100px 20px;
 		height: 100%;
 	}
-
 </style>   
-
+<script>
+					$('.modalPersonal').on('show.bs.modal', function (event) {
+							var button = $(event.relatedTarget) // Button that triggered the modal
+							var modal = $(this)
+							$.ajax({
+								type: "POST",
+								url: "modalPersonal.php",
+								data: {unit_code , nrpt_unit_parent },
+							// dataType: "",
+							success: function (response) {
+								// console.log(response)
+								modal.find('.modal-body').html(response)
+							}
+						});						
+					})
+</script>
 <?php
 include ('script.php');
 ?>
