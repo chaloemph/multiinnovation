@@ -43,19 +43,20 @@ if($num > 0){
     '$ACK_DIVISION','$ACK_EXPLANATION','$ACK_SUMMARY','$ACK_VERSION')";
     $result2 = mysqli_query($conn, $sql1) or die ("Error in query: $sql1 " . mysqli_error()); 
 
+    $ACK_NUM_ID = mysqli_insert_id($conn);
+   
 
     // $sql2 = "INSERT INTO j3_nrpt_approve(UNIT_CODE,NRPT_NAME,NRPT_ACM,NRPT_NUNIT,NRPT_NPAGE,NRPT_DMYUPD,NRPT_UNIT_PARENT,NRPT_USER,UNIT_ACM_ID)
     // VALUES ('$UNIT_NAME2','$UNIT_NAME','$UNIT_NAME_ACK','$UNIT_NAME2','12434',current_timestamp(),'$UNIT_CODE_PARENT','$ACK_USER','$UNIT_ACM_ID')";
     // $result3 = mysqli_query($conn, $sql2) or die ("Error in query: $sql2 " . mysqli_error()); 
-
+    
+    $result = mysqli_query($conn, "TRUNCATE j3_nrpt_approve") or die(mysqli_error());
+    $result = mysqli_query($conn, "TRUNCATE j3_rost_approve") or die(mysqli_error());
 
     switch ($_POST["UNIT_ACM_CREATE"]) {
         
         case 'กรม':
-            $c = 0;
-            $result = mysqli_query($conn, "TRUNCATE j3_nrpt_approve") or die(mysqli_error());
-            $result = mysqli_query($conn, "TRUNCATE j3_rost_approve") or die(mysqli_error());
-
+            
             $sql_insert_j3_nrpt = "INSERT INTO `j3_nrpt_approve` 
             SELECT * FROM `j3_nrpt` WHERE UNIT_ACM_ID LIKE '".$_POST["UNIT_ACM"]."'  ";
             $result = mysqli_query($conn, $sql_insert_j3_nrpt) or die(mysqli_error());
@@ -122,9 +123,6 @@ if($num > 0){
         break;
 
         case 'สำนัก':
-            $c = 0;
-            $result = mysqli_query($conn, "TRUNCATE j3_nrpt_approve") or die(mysqli_error());
-            $result = mysqli_query($conn, "TRUNCATE j3_rost_approve") or die(mysqli_error());
 
             $sql_insert_j3_nrpt = "INSERT INTO `j3_nrpt_approve` 
             SELECT * FROM `j3_nrpt` WHERE UNIT_ACM_ID LIKE '".$_POST["UNIT_CODE_PARENT"]."'  ";
@@ -193,10 +191,7 @@ if($num > 0){
         break;
 
         case 'ศูนย์':
-            $c = 0;
-            $result = mysqli_query($conn, "TRUNCATE j3_nrpt_approve") or die(mysqli_error());
-            $result = mysqli_query($conn, "TRUNCATE j3_rost_approve") or die(mysqli_error());
-
+        
             $sql_insert_j3_nrpt = "INSERT INTO `j3_nrpt_approve` 
             SELECT * FROM `j3_nrpt` WHERE  SUBSTRING(UNIT_CODE, 1, 5) LIKE '".substr($_POST["UNIT_CODE_PARENT"] , 0, 5)."'  ";
             $result = mysqli_query($conn, $sql_insert_j3_nrpt) or die(mysqli_error());
@@ -263,10 +258,7 @@ if($num > 0){
         break;
 
         case 'กอง':
-            $c = 0;
-            $result = mysqli_query($conn, "TRUNCATE j3_nrpt_approve") or die(mysqli_error());
-            $result = mysqli_query($conn, "TRUNCATE j3_rost_approve") or die(mysqli_error());
-
+            
             $sql_insert_j3_nrpt = "INSERT INTO `j3_nrpt_approve` 
             SELECT * FROM `j3_nrpt` WHERE  SUBSTRING(UNIT_CODE, 1, 8) LIKE '".substr($_POST["UNIT_CODE_PARENT"] , 0, 8)."'  ";
             $result = mysqli_query($conn, $sql_insert_j3_nrpt) or die(mysqli_error());
@@ -323,10 +315,7 @@ if($num > 0){
             echo 'กอง';
         break;
         case 'แผนก':
-            $c = 0;
-            $result = mysqli_query($conn, "TRUNCATE j3_nrpt_approve") or die(mysqli_error());
-            $result = mysqli_query($conn, "TRUNCATE j3_rost_approve") or die(mysqli_error());
-
+            
             $sql_insert_j3_nrpt = "INSERT INTO `j3_nrpt_approve` 
             SELECT * FROM `j3_nrpt` WHERE  SUBSTRING(UNIT_CODE, 1, 10) LIKE '".substr($_POST["UNIT_CODE_PARENT"] , 0, 10)."'  ";
             $result = mysqli_query($conn, $sql_insert_j3_nrpt) or die(mysqli_error());
