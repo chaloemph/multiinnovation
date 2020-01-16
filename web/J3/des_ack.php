@@ -1119,8 +1119,11 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
 			success: function (response) {
 				console.log(response)
 				$('#modalPersonal input[name="ROST_POSNAME"]').val(rost_postname + response.NRPT_NAME + ' ' + rost_nparent)
-				
-				$('#modalPersonal input[name="ROST_POSNAME_ACM"]').val(rost_postname_acm + response.NRPT_ACM.split(".")[1] + ' ' + rost_nparent_acm)
+				if (response.NRPT_ACM != rost_nparent_acm){
+					$('#modalPersonal input[name="ROST_POSNAME_ACM"]').val(rost_postname_acm + response.NRPT_ACM.split(".")[1] + ' ' + rost_nparent_acm)
+				}else{
+					$('#modalPersonal input[name="ROST_POSNAME_ACM"]').val(rost_postname_acm + rost_nparent_acm)
+				}
 
 
 				
