@@ -166,6 +166,15 @@
                 include 'connect.php';
                 // echo json_encode($_POST);
                 // die();
+
+                $sql_find_NRPT_NAME = "SELECT * FROM `j3_nrpt` WHERE UNIT_CODE LIKE '".substr($_POST["UNIT_CODE"] , 0, 4)."000000'  ";
+                $res = mysqli_query($conn, $sql_find_NRPT_NAME);
+                $result = mysqli_fetch_assoc($res);
+                $NRPT_NAME_OLD = $result["NRPT_NAME"];
+                $NRPT_ACM_OLD = $result["NRPT_ACM"];
+                $arr_NRPT_ACM_OLD = explode(".", $NRPT_ACM_OLD );
+
+                
                 
                 $index = $_POST["index"];
                 
@@ -198,8 +207,15 @@
                 while($row = mysqli_fetch_assoc($res)) {
                     $ROST_UNIT = substr( $new_unit_acm_id , 0 , 5).substr( $row["ROST_UNIT"] , 5 , 10);
                     $ROST_CPOS = $row["ROST_CPOS"];
-                    $ROST_POSNAME = $row["ROST_POSNAME"];
-                    $ROST_POSNAME_ACM = $row["ROST_POSNAME_ACM"];
+
+                    $ROST_POSNAME =  str_replace($_POST["UNIT_NAME_OLD"],$_POST["UNIT_NAME"] , $row["ROST_POSNAME"]);
+                    $ROST_POSNAME =  str_replace($NRPT_NAME_OLD, "", $ROST_POSNAME);
+
+                    // $ROST_POSNAME_ACM = $row["ROST_POSNAME_ACM"];
+
+                    $ROST_POSNAME_ACM =  str_replace($_POST["UNIT_NAME_ACK_OLD"],$_POST["UNIT_NAME_ACK"] , $row["ROST_POSNAME_ACM"]);
+                    $ROST_POSNAME_ACM =  str_replace(".".$arr_NRPT_ACM_OLD[0], "", $ROST_POSNAME_ACM);
+
                     $ROST_RANK = $row["ROST_RANK"];
                     $ROST_RANKNAME = $row["ROST_RANKNAME"];
                     $ROST_LAO_MAJ = $row["ROST_LAO_MAJ"];
@@ -232,6 +248,8 @@
                 //  echo json_encode($sql_update_main_j3_nrpt);
                 $res = mysqli_query($conn, $sql_update_main_j3_nrpt);
                 $sql_update_j3_nrpt = "UPDATE `j3_nrpt` SET
+                NRPT_NAME = Replace(NRPT_NAME , '".$_POST["UNIT_NAME_OLD"]."', '".$_POST["UNIT_NAME"]."' ) ,
+                NRPT_ACM = Replace(NRPT_ACM , '".$_POST["UNIT_NAME_ACK_OLD"]."', '".$_POST["UNIT_NAME_ACK"]."' ) ,
                 UNIT_CODE = Replace(UNIT_CODE , Substring(UNIT_CODE, 1, 5), ".substr( $new_unit_acm_id , 0 , 5)." ) ,
                 NRPT_NUNIT = Replace(NRPT_NUNIT , Substring(NRPT_NUNIT, 1, 5), ".substr( $new_unit_acm_id , 0 , 5)." ) ,
                 NRPT_UNIT_PARENT = Replace(NRPT_UNIT_PARENT , Substring(NRPT_UNIT_PARENT, 1, 5), ".substr( $new_unit_acm_id , 0 , 5)." ) ,
@@ -239,6 +257,14 @@
                 WHERE SUBSTRING(NRPT_UNIT_PARENT, 1, 5) LIKE '".substr($_POST["UNIT_CODE"] , 0, 5)."'
                  ";
                  $res = mysqli_query($conn, $sql_update_j3_nrpt);
+
+                 $sql_update_j3_nrpt = "UPDATE `j3_nrpt` SET
+                NRPT_NAME = Replace(NRPT_NAME , '".$NRPT_NAME_OLD."', '' ) ,
+                NRPT_ACM = Replace(NRPT_ACM , '.".$arr_NRPT_ACM_OLD[0]."', '' ) 
+                WHERE SUBSTRING(UNIT_CODE, 1, 5) LIKE '".substr( $new_unit_acm_id , 0 , 5)."'
+                 ";
+                 $res = mysqli_query($conn, $sql_update_j3_nrpt);
+
                  
                 
                 $sql_insert_j3_ack = "INSERT INTO `j3_ack` (`ACK_NUM_ID`, `ACK_ID`, `ACK_MISSION`, 
@@ -247,7 +273,7 @@
                 
                 `ACK_SUMMARY`, `ACK_USER`, `ACK_NAME`, `UNIT_CODE`, `UNIT_NAME`, `UNIT_NAME_ACK`, 
                 
-                `UNIT_CODE_PARENT`, `ACK_TIMESTAMP`, `ACK_VERSION`) VALUES (NULL, '".$_POST
+                `UNIT_CODE_PARENT`, `ACK_TIMESTAMP`, `ACK_VERSION`, `UNIT_ACM_ID`, `UNIT_ACM_CREATE`) VALUES (NULL, '".$_POST
                 
                 ["ACK_ID"]."', '".$_POST["ACK_MISSION"]."', '".$_POST["ACK_DISTRIBUTION"]."', '".$_POST
                 
@@ -257,8 +283,10 @@
                 
                 '".$new_unit_acm_id."', '".$_POST["UNIT_NAME"]."',
                 
-                '".$_POST["UNIT_NAME_ACK"]."', '".$new_unit_acm_id."',  current_timestamp(), '') ";
+                '".$_POST["UNIT_NAME_ACK"]."', '".$new_unit_acm_id."',  current_timestamp(), '', '".$PART_NUMBER."', '".$_POST["UNIT_ACM_CREATE"]."' ) ";
                 $res = mysqli_query($conn, $sql_insert_j3_ack);
+
+                
                 $sql_find_new_j3_ratepersonal =  "SELECT * FROM `j3_rost` WHERE ROST_NUNIT LIKE '".$new_unit_acm_id."' ";
                 $res = mysqli_query($conn, $sql_find_new_j3_ratepersonal);
                 while($row = mysqli_fetch_assoc($res)) {
@@ -266,6 +294,8 @@
                     $result = mysqli_query($conn, $sql_insert_j3_ratepersonal);
                     // echo json_encode($result);
                 }
+
+                echo json_encode('success');
                 
                 
             break;

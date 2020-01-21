@@ -27,8 +27,8 @@ while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
 	$NRPT_NAME = explode(' ', $row['NRPT_NAME']); 
 	$NRPT_NAME = $NRPT_NAME[0];
 
-	$NRPT_ACM = explode('.', $row['NRPT_ACM']); 
-	$NRPT_ACM = $NRPT_ACM[0];
+	// $NRPT_ACM = explode('.', $row['NRPT_ACM']); 
+	// $NRPT_ACM = $NRPT_ACM[0];
 
 }	
 ?>

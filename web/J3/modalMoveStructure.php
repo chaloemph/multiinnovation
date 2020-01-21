@@ -67,20 +67,22 @@
         type: "POST",
         url: "unit_structure_query.php",
         data: formdata+"&do=process",
-        dataType: "json",
+        // dataType: "json",
         success: function (response) {
           console.log(response)
-          $.ajax({
-            type: "POST",
-            url: "ct_create_ack.php",
-            data: $('form[action="ct_create_ack.php"]').serialize() ,
-            dataType: "dataType",
-            success: function (response) {
-             console.log(response)
-             alert('ย้ายโครงสร้างเรียบร้อยแล้ว')
-             location.reload();
-           }
-         });
+          alert('ย้ายโครงสร้างเรียบร้อยแล้ว')
+          location.reload();
+        //   $.ajax({
+        //     type: "POST",
+        //     url: "ct_create_ack.php",
+        //     data: $('form[action="ct_create_ack.php"]').serialize() ,
+        //     // dataType: "dataType",
+        //     success: function (response) {
+        //      console.log(response)
+        //     //  alert('ย้ายโครงสร้างเรียบร้อยแล้ว')
+        //     //  location.reload();
+        //    }
+        //  });
         }
       });
 
