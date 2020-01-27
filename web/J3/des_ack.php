@@ -49,6 +49,15 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
 	<?php
 	include ('haed.php');
 	?>
+	<link rel="stylesheet" href="https:////cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css">
+	<style>
+	.select2-container--default .select2-selection--single {
+    background-color: #fff;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    padding: 3px;
+}
+	</style>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 	<div class="wrapper">
@@ -503,21 +512,37 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
 						<div class="modal-body">
 							<input type="hidden" name="upd_id" id="upd_id">
 							<div class="form-row">
+								<div class="form-group col-md-12">
+								<label><b>ค้นหาตำแหน่งหน้าที่</b></label>
+									<select name="search" class="form-control">
+										<option value="">--กรุณาเลือก--</option>
+										<?php
+										include ('connect.php');
+										$sql = "SELECT * FROM j3_cpos";
+										$res = mysqli_query($conn, $sql);
+										while($row= mysqli_fetch_assoc($res)) {
+											echo '<option value="'.$row['ROST_CPOS'].'" data-ROST_CPOS_NAME="'.$row['ROST_CPOS_NAME'].'" data-ROST_CPOS_ACM="'.$row['ROST_CPOS_ACM'].'" >'.$row['ROST_CPOS_NAME'].'</option>';
+										}
+										?>
+									</select>
+								</div>
+							</div>
+							<div class="form-row">
 								<div class="form-group col-md-2">
 									<label><b>หมายเลข อฉก.</b></label>
 									<input type="text" class="form-control form-control-inverse" name="ACK_ID" value="<?=$ACK_ID?>">
 								</div>
 								<div class="form-group col-md-2">
 									<label><b>รหัสประจำตำแหน่ง</b></label>
-									<input type="text" class="form-control form-control-inverse" name="ROST_CPOS" id="ROST_CPOS">
+									<input type="text" class="form-control form-control-inverse" name="ROST_CPOS" id="ROST_CPOS"  >
 								</div>
 								<div class="form-group col-md-5">
 									<label><b>ตำแหน่งหน้าที่</b></label>
-									<input type="text" class="form-control form-control-inverse" name="ROST_POSNAME" id="ROST_POSNAME">
+									<input type="text" class="form-control form-control-inverse" name="ROST_POSNAME" id="ROST_POSNAME" readonly="true">
 								</div>
 								<div class="form-group col-md-3">
 									<label><b>ตำแหน่งหน้าที่(ย่อ)</b></label>
-									<input type="text" class="form-control form-control-inverse" name="ROST_POSNAME_ACM">
+									<input type="text" class="form-control form-control-inverse" name="ROST_POSNAME_ACM" readonly="true">
 								</div>
 							</div>
 							<div class="form-row">
@@ -910,6 +935,7 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.js"></script>
 
 <script>
 	function openPage(pageName,elmnt,color) {
@@ -995,6 +1021,7 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
                     	success: function (response) {
                     		var arr_input_key = ['ACK_ID', 'ROST_CPOS', 'ROST_POSNAME'  , 'ROST_POSNAME_ACM' , 'ROST_NCPOS12', 'ROST_ID', 'ROST_PARENT', 'ROST_NUNIT', 'ROST_NPARENT' , 'ROST_UNIT' ]
                     		var arr_select_key = ['ROST_RANK' , 'CLAO_NAME_SHORT' ]
+							var arr_old_key = ['ROST_POSNAME'  , 'ROST_POSNAME_ACM']
                     		$.each(response, function (indexInArray, valueOfElement) { 
                     			if (jQuery.inArray(indexInArray, arr_input_key) !== -1){
                     				if (valueOfElement != ''){
@@ -1010,6 +1037,13 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
                     					}
                     				}
                     			}
+
+								if (jQuery.inArray(indexInArray, arr_old_key) !== -1){
+                    				if (valueOfElement != ''){
+                    					modal.find('input[name="'+indexInArray+'"]').attr('old-'+indexInArray, valueOfElement)
+                    				}
+                    			}
+
                     		});
                     		modal.find('#ROST_ID').val(ROST_ID)
                     	}
@@ -1183,6 +1217,28 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
 			// console.log( $(this).serialize() )
 		event.preventDefault()
 	});
+
+	$('select[name="search"]').select2({
+		width: '100%'
+	});
+
+	$('select[name="search"]').on('change', function () {
+		var _this = $(this)
+		var selected_rost_postname  = _this.find("option[value='" + _this.val() + "']").attr('data-rost_cpos_name')
+		var selected_rost_postname_acm  = _this.find("option[value='" + _this.val() + "']").attr('data-rost_cpos_acm')
+		var old_rost_postname = $('input[name="ROST_POSNAME"]').attr('old-rost_posname')
+		var old_rost_postname_acm = $('input[name="ROST_POSNAME_ACM"]').attr('old-rost_posname_acm')
+		// var selected_rost_postname = $('select[name="search"]').select2().find(":selected").data("data-ROST_CPOS_NAME'");
+		if(_this.val()){
+			$('input[name="ROST_POSNAME"]').val(selected_rost_postname + ' ' + old_rost_postname)
+			$('input[name="ROST_POSNAME_ACM"]').val(selected_rost_postname_acm + '' + old_rost_postname_acm)
+			$('input[name="ROST_CPOS"]').val(_this.val())
+		}
+	});
+
+	$('#EditModal').on('hidden.bs.modal', function (event) {
+		location.reload()
+	})
 </script>
 
 </body>

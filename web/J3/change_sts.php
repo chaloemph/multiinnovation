@@ -9,10 +9,24 @@ $UNIT_ACM_CREATE = $row['UNIT_ACM_CREATE'];
 $UNIT_ACM_ID = $row['UNIT_ACM_ID'];
 $UNIT_CODE = $row['UNIT_CODE'];
 $UNIT_CODE_PARENT = $row['UNIT_CODE_PARENT'];
+$UNIT_NAME = $row['UNIT_NAME'];
+$UNIT_NAME_ACK = $row['UNIT_NAME_ACK'];
+
+
+$sql_find_part_id = "SELECT PART_ID FROM `j3_unit_acm` WHERE SUBSTRING(UNIT_ACM_ID, 1, 2) LIKE '".substr($UNIT_ACM_ID , 0, 2)."' AND PART_ID != 0 LIMIT 1 ";
+$query_find_part_id = mysqli_query($conn,$sql_find_part_id) or die(mysql_error());
+$result_find_part_id = mysqli_fetch_assoc($query_find_part_id) ;
+$PART_ID = $result_find_part_id['PART_ID'];
+$sql_insert_j3_unit_acm = "INSERT INTO `j3_unit_acm` (`UNIT_ACM_ID`, `UNIT_NAME`, `UNIT_ACM_NAME`, `PART_ID`, `SORT`) 
+VALUES ('$UNIT_CODE', '$UNIT_NAME', '$UNIT_NAME_ACK', '$PART_ID', '0')";
+
+
 
 
 switch ($UNIT_ACM_CREATE) {
     case 'กรม':
+        $result_query_insert_j3_unit_acm = mysqli_query($conn,$sql_insert_j3_unit_acm) or die(mysqli_error($conn) . "<br>$sql_insert_j3_unit_acm");
+
         $sql = "INSERT INTO `j3_nrpt` SELECT * FROM `j3_nrpt_approve` WHERE UNIT_ACM_ID LIKE '$UNIT_CODE'  ";
         $result = mysqli_query($conn, $sql) or die(mysqli_error());
         $sql = "DELETE FROM `j3_nrpt_approve` WHERE UNIT_ACM_ID LIKE '$UNIT_CODE'  ";
@@ -49,6 +63,7 @@ switch ($UNIT_ACM_CREATE) {
     break;
 
     case 'สำนัก':
+        $result_query_insert_j3_unit_acm = mysqli_query($conn,$sql_insert_j3_unit_acm) or die(mysqli_error($conn) . "<br>$sql_insert_j3_unit_acm");
 
         $sql = "INSERT INTO `j3_nrpt` SELECT * FROM `j3_nrpt_approve` WHERE SUBSTRING(UNIT_CODE, 1, 4) LIKE '".substr($UNIT_CODE , 0, 4)."'  ";
         $result = mysqli_query($conn, $sql) or die(mysqli_error());
