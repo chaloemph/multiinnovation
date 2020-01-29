@@ -226,20 +226,22 @@ if($num > 0){
              UNIT_CODE = Replace(UNIT_CODE , Substring(UNIT_CODE, 1, 5), ".substr( $_POST["UNIT_NAME2"] , 0 , 5)." )  ,
              NRPT_NUNIT = Replace(NRPT_NUNIT , Substring(NRPT_NUNIT, 1, 5), ".substr( $_POST["UNIT_NAME2"] , 0 , 5)." )  ,
              NRPT_UNIT_PARENT = Replace(NRPT_UNIT_PARENT , Substring(NRPT_UNIT_PARENT, 1, 5), ".substr( $_POST["UNIT_NAME2"] , 0 , 5)." )  ,
-             UNIT_ACM_ID = Replace(UNIT_ACM_ID , Substring(UNIT_ACM_ID, 1, 3), ".substr( $_POST["UNIT_NAME2"] , 0 , 3)." ) ,
+             UNIT_ACM_ID = '".substr($_POST["UNIT_NAME2"],0,4)."".'000000'."' ,
              NRPT_NAME = REPLACE(NRPT_NAME, '".$_POST["UNIT_NAME_OLD"]."', '".$_POST["UNIT_NAME"]."') ,
              NRPT_ACM = REPLACE(NRPT_ACM, '".$_POST["UNIT_NAME_ACK_OLD"]."', '".$_POST["UNIT_NAME_ACK"]."') 
-             WHERE  SUBSTRING(UNIT_CODE, 1, 5) LIKE '".substr($_POST["UNIT_CODE_PARENT"] , 0, 5)."' AND NRPT_UNIT_PARENT != '".substr($_POST["UNIT_CODE_PARENT"],0,4)."".'000000'."'
+             WHERE  SUBSTRING(UNIT_CODE, 1, 5) LIKE '".substr($_POST["UNIT_CODE_PARENT"] , 0, 5)."' AND NRPT_UNIT_PARENT != '".substr($_POST["UNIT_CODE_PARENT"],0,2)."".'00000000'."'
                ";
             $result = mysqli_query($conn, $sql_update_j3_nrpt_approve) or die(mysqli_error());
 
             $sql_update_j3_nrpt_approve = "UPDATE `j3_nrpt_approve` SET 
+             
+             NRPT_UNIT_PARENT = Replace(NRPT_UNIT_PARENT , Substring(NRPT_UNIT_PARENT, 1, 4), ".substr( $_POST["UNIT_NAME2"] , 0 , 4)." )  ,
              UNIT_CODE = Replace(UNIT_CODE , Substring(UNIT_CODE, 1, 5), ".substr( $_POST["UNIT_NAME2"] , 0 , 5)." )  ,
              NRPT_NUNIT = Replace(NRPT_NUNIT , Substring(NRPT_NUNIT, 1, 5), ".substr( $_POST["UNIT_NAME2"] , 0 , 5)." )  ,
-             UNIT_ACM_ID = Replace(UNIT_ACM_ID , Substring(UNIT_ACM_ID, 1, 3), ".substr( $_POST["UNIT_NAME2"] , 0 , 3)."  ) ,
+             UNIT_ACM_ID = '".substr($_POST["UNIT_NAME2"],0,4)."".'000000'."' ,
              NRPT_NAME = REPLACE(NRPT_NAME, '".$_POST["UNIT_NAME_OLD"]."', '".$_POST["UNIT_NAME"]."') ,
              NRPT_ACM = REPLACE(NRPT_ACM, '".$_POST["UNIT_NAME_ACK_OLD"]."', '".$_POST["UNIT_NAME_ACK"]."') 
-             WHERE   NRPT_UNIT_PARENT LIKE '".substr($_POST["UNIT_CODE_PARENT"],0,4)."".'000000'."'
+             WHERE   NRPT_UNIT_PARENT LIKE '".substr($_POST["UNIT_CODE_PARENT"],0,2)."".'00000000'."'
                ";
             $result = mysqli_query($conn, $sql_update_j3_nrpt_approve) or die(mysqli_error());
 
