@@ -143,7 +143,7 @@ $count_4 = $row_c3['count'];
 
 										?>
 									</td>
-									<td style="width: 150px; text-align: center;">
+									<td style="width: 400px; text-align: center;">
 										<a class="btn btn-info btn-sm" href="des_ack.php?id=<?=$ACK_NUM_ID?>">
 											<i class="fas fa-pencil-alt">
 											</i>
@@ -153,6 +153,11 @@ $count_4 = $row_c3['count'];
 											<i class="fas fa-trash">
 											</i>
 											DELETE
+										</a>
+										<a class="btn btn-warning btn-sm" href="clone_data.php?ACK_NUM_ID=<?=$ACK_NUM_ID?>" onclick="return confirm('คุณต้องการเพิ่มเวอร์ชั่น ใช่หรือไม่ ?')">
+											<i class="fas fa-copy">
+											</i>
+											CLONE
 										</a>
 									</td>
 								</tr>

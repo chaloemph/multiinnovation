@@ -4,6 +4,9 @@ $ACK_NUM_ID = $_GET['id'];
 $UNIT_CODE_4 = $_GET['id2'];
 $UNIT_CODE_5 = $_GET['id3'];
 $UNIT_CODE_6 = $_GET['id4'];
+
+$dd;
+
 $sql ="SELECT * FROM j3_ack WHERE ACK_NUM_ID = :ACK_NUM_ID";
 $stmt=$db->prepare($sql);
 $stmt->bindparam(':ACK_NUM_ID',$ACK_NUM_ID);
@@ -21,19 +24,22 @@ $ACK_SUMMARY = $row['ACK_SUMMARY'];
 $ACK_USER = $row['ACK_USER'];
 $ACK_NAME = $row['ACK_NAME'];
 $UNIT_CODE_2 = $row['UNIT_CODE'];
+$UNIT_ACM_ID = $row['UNIT_ACM_ID'];
 $UNIT_NAME = $row['UNIT_NAME'];
 $UNIT_NAME_ACK = $row['UNIT_NAME_ACK'];
 $UNIT_CODE_PARENT = $row['UNIT_CODE_PARENT'];
 $ACK_TIMESTAMP = $row['ACK_TIMESTAMP'];
 $ACK_STS = $row['ACK_STS'];
 $ACK_VERSION = $row['ACK_VERSION'];
+
 $sql1 = "SELECT NRPT_ACM FROM j3_nrpt WHERE UNIT_CODE = :UNIT_CODE_PARENT";
 $stmt1=$db->prepare($sql1);
 $stmt1->bindparam(':UNIT_CODE_PARENT',$UNIT_CODE_PARENT);
 $stmt1->execute();
 $row1=$stmt1->fetch(PDO::FETCH_ASSOC);
 $ACM_PARENT = $row1['NRPT_ACM'];
-$sql2 = "SELECT * FROM j3_nrpt_approve WHERE UNIT_CODE = :UNIT_CODE_2";
+
+$sql2 = "SELECT * FROM j3_nrpt_transaction WHERE UNIT_CODE = :UNIT_CODE_2";
 $stmt2=$db->prepare($sql2);
 $stmt2->bindparam(':UNIT_CODE_2',$UNIT_CODE_2);
 $stmt2->execute();
@@ -41,6 +47,35 @@ $row2=$stmt2->fetch(PDO::FETCH_ASSOC);
 $NRPT_UNIT_PARENT_1 = $row2['NRPT_UNIT_PARENT'];
 $NRPT_NAME_1 = $row2['NRPT_NAME'];
 $NRPT_ACM_1 = $row2['NRPT_ACM'];
+
+$sql_11 ="SELECT * FROM j3_nrpt_transaction WHERE UNIT_CODE = :ACK_NUM_ID";
+$stmt_11=$db->prepare($sql_11);
+$stmt_11->bindparam(':ACK_NUM_ID',$ACK_NUM_ID);
+$stmt_11->execute();
+while($row_11=$stmt_11->fetch(PDO::FETCH_ASSOC)){
+	$UNIT_CODE = $row_11['UNIT_CODE'];
+	$NRPT_NAME = $row_11['NRPT_NAME'];
+	$NRPT_ACM = $row_11['NRPT_ACM'];
+	$NRPT_NUNIT = $row_11['NRPT_NUNIT'];
+	$NRPT_NPAGE = $row_11['NRPT_NPAGE'];
+	$NRPT_DMYUPD = $row_11['NRPT_DMYUPD'];
+	$NRPT_UNIT_PARENT = $row_11['NRPT_UNIT_PARENT'];
+	$NRPT_USER = $row_11['NRPT_USER'];
+}
+
+$sql_2 = "SELECT * FROM j3_unit WHERE UNIT_CODE = :ACK_NUM_ID";
+$stmt_2=$db->prepare($sql_2);
+$stmt_2->bindparam(':ACK_NUM_ID',$ACK_NUM_ID);
+$stmt_2->execute();
+$row_2=$stmt_2->fetch(PDO::FETCH_ASSOC);
+$UNIT_NAME_2 = $row_2['UNIT_NAME'];
+$UNIT_ACM_2 =$row_2['UNIT_ACM'];
+$UNIT_PROV_2 =$row_2['UNIT_PROV'];
+$UNIT_DMY_2 =$row_2['UNIT_DMY'];
+$DMY = substr($UNIT_DMY_2,0,2);
+$DMY2 = substr($UNIT_DMY_2,2,2);
+$DMY3 = substr($UNIT_DMY_2,4,4);
+
 ?>
 
 <!DOCTYPE html>
@@ -49,7 +84,7 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
 	<?php
 	include ('haed.php');
 	?>
-	<link rel="stylesheet" href="https:////cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css">
+		<link rel="stylesheet" href="https:////cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css">
 	<style>
 	.select2-container--default .select2-selection--single {
     background-color: #fff;
@@ -72,60 +107,633 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
 						<div class="col-md-12"><br>
 							<div class="card">
 								<div class="card-body">
-									<table id="example1" class="table table-bordered table-striped">
-										<thead class="bg-secondary">
-											<tr>
-												<th style="text-align: center;">หมายเลขหน่วย</th>
-												<th style="text-align: center;">หมายเลขหน่วยหลัก</th>
-												<th>นามหน่วย</th>
-												<th>นามหน่วยย่อ</th>
-												<th style="text-align: center;"><i class="fas fa-cogs nav-icon" ></i></th>
-											</tr>
-										</thead>
-										<tbody>
-											<?php
-											$sql = "SELECT * FROM j3_nrpt_approve WHERE NRPT_UNIT_PARENT = :UNIT_CODE_2 OR UNIT_ACM_ID = :NRPT_UNIT_PARENT_1 ORDER BY NRPT_UNIT_PARENT ASC";
-											$stmt=$db->prepare($sql);
-											$stmt->bindparam(':UNIT_CODE_2',$UNIT_CODE_2);
-											$stmt->bindparam(':NRPT_UNIT_PARENT_1',$NRPT_UNIT_PARENT_1);
-											$stmt->execute();
-											while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
-												$UNIT_CODE = $row['UNIT_CODE'];
-												$NRPT_NAME = $row['NRPT_NAME'];
-												$NRPT_ACM = $row['NRPT_ACM'];
-												$NRPT_NUNIT = $row['NRPT_NUNIT'];
-												$NRPT_NPAGE = $row['NRPT_NPAGE'];
-												$NRPT_DMYUPD = $row['NRPT_DMYUPD'];
-												$NRPT_UNIT_PARENT = $row['NRPT_UNIT_PARENT'];
-												$NRPT_USER = $row['NRPT_USER'];
-												$UNIT_ACM_ID = $row['UNIT_ACM_ID'];
+									<section class="content">
+										<div class="container-fluid">
+												<div class="card card-default">
+													<div class="card-header">
+														<div style="text-vlign: center; ">
+															<div class="row">
+																<label style="vertical-align: middle">อจย./อฉก. :</label>
+																<div class="col-md-2">
+																	<input type="text" class="form-control" name="ACK_ID" value="<?=$ACK_ID?>">
+																</div>
+																&nbsp;
+																<label>หมายเลข :</label>
+																<div class="col-md-2">
+																	<input type="text" class="form-control" name="ACK_ID">
+																</div>
+																&nbsp;
+																<label>ว/ด/ป อนุมัติ :</label>
+																<div class="col-md-2">
+																	<input type="text" class="form-control" name="UNIT_DMY" value="<?=$DMY;?>/<?=$DMY2;?>/<?=$DMY3?>">
+																</div>
+																&nbsp;
+																<label>อสอ. :</label>
+																<div class="col-md-2">
+																	<input type="text" class="form-control" name="ACK_ID" value="<?=$ACK_STS?>">
+																</div>	
+															</div>
+														</div>
+													</div>
+													<div class="card-body">
+														<div class="row">
+															<div class="col-12 col-sm-5">
+																<div class="form-group">
+																	<label>นามหน่วยเต็ม</label>
+																	<input type="text" class="form-control" name="UNIT_NAME" value="<?=$UNIT_NAME?>">
+																</div>
+															</div>
+															<div class="col-12 col-sm-3">
+																<div class="form-group">
+																	<label>นามหน่วยย่อ</label>
+																	<input type="text" class="form-control" name="UNIT_ACM" value="<?=$UNIT_NAME_ACK?>">
+																</div>
+															</div>
+															<div class="col-12 col-sm-2">
+																<div class="form-group">
+																	<label>จว.ที่ตั้ง</label>
+																	<input type="text" class="form-control" name="UNIT_PROV" value="">
+																</div>
+															</div>
+															<div class="col-12 col-sm-2">
+																<div class="form-group">
+																	<label>ว/ด/ป อนุมัติ</label>
+																	<input type="text" class="form-control" name="UNIT_DMY" value="<?=$DMY;?>/<?=$DMY2;?>/<?=$DMY3?>">
+																</div>
+															</div>
+															<div class="col-12 col-sm-2">
+																<div class="form-group">
+																	<label>รหัสหน่วย</label>
+																	<input type="text" class="form-control" name="UNIT_CODE_PARENT"
+																		value="<?=$UNIT_CODE_2?>">
+																</div>
+															</div>
+															<div class="col-12 col-sm-5">
+																<div class="form-group">
+																	<label>รหัสหน่วยกรมบัญชีกลาง</label>
+																	<input type="text" class="form-control" name="ACK_ESSENCE">
+																</div>
+															</div>
+															<div class="col-12 col-sm-2">
+																<div class="form-group">
+																	<label>วัน-เวลา ณ ทำรายการล่าสุด</label>
+																	<input type="text" class="form-control" name="ACK_TIMESTAMP"
+																		value="<?=date('d/m/Y H:i:s') ?>" readonly>
+																</div>
+															</div>
+															<div class="col-12 col-sm-2">
+																<div class="form-group">
+																	<label>ผู้ทำรายการ</label>
+																	<input type="text" class="form-control" name="ACK_USER" readonly>
+																</div>
+															</div>
+															<div class="col-12 col-sm-1">
+																<div class="form-group">
+																	<label>เวอร์ชัน</label>
+																	<input type="text" class="form-control" name="ACK_VERSION" value="1" readonly>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+										</div>
+									</section>
+									<?php
+										if($ACK_NUM_ID == "6110000000"){
+											echo'<table id="example1" class="table table-bordered table-striped">
+												<thead class="bg-info">                                                        
+													<tr>
+														<th style="text-align: center;">ประเภท</th>
+														<th style="text-align: center;">สัญญาบัตร</th>
+														<th style="text-align: center;">ประทวน</th>
+														<th style="text-align: center;">พลอาสาสมัคร</th>
+														<th style="text-align: center;">พลทหาร</th>
+														<th style="text-align: center;">ลูกจ้างประจำ</th>
+														<th style="text-align: center;">พนักงานราชการ</th>
+													</tr>
+												</thead>
+												<tbody>';
+													
+														include ('connectpdo.php');
+															$sql_u = "SELECT * FROM j3_unit WHERE UNIT_CODE = :UNIT_ACM_ID";
+															$stmt_u=$db->prepare($sql_u);
+															$stmt_u->bindparam(':UNIT_ACM_ID',$UNIT_ACM_ID);
+															$stmt_u->execute();
+															$row_u=$stmt_u->fetch(PDO::FETCH_ASSOC);
+															//while($row2=$stmt2->fetch(PDO::FETCH_ASSOC)){
+																$UNIT_COF_FULL = $row_u['UNIT_COF_FULL'];//สัญญา
+																$UNIT_COF_FILL = $row_u['UNIT_COF_FILL'];
+																$UNIT_COF_REAL = $row_u['UNIT_COF_REAL'];
+																$UNIT_NCO_FULL = $row_u['UNIT_NCO_FULL'];//ประทวน
+																$UNIT_NCO_FILL = $row_u['UNIT_NCO_FILL'];
+																$UNIT_NCO_REAL = $row_u['UNIT_NCO_REAL'];
+																$UNIT_PVT_FULL = $row_u['UNIT_PVT_FULL'];//พลอาสา
+																$UNIT_PVT_FILL = $row_u['UNIT_PVT_FILL'];
+																$UNIT_PVT_REAL = $row_u['UNIT_PVT_REAL'];
+																$UNIT_EMPY_FULL = $row_u['UNIT_EMPY_FULL'];//ลูกจ้างประจำ
+																$UNIT_EMPY_FILL = $row_u['UNIT_EMPY_FILL'];
+																$UNIT_EMPY_REAL = $row_u['UNIT_EMPY_REAL'];
+																$UNIT_TEMP_FULL = $row_u['UNIT_TEMP_FULL'];//ลูกจ้างชั่ว
+																$UNIT_TEMP_FILL = $row_u['UNIT_TEMP_FILL'];
+																$UNIT_TEMP_REAL = $row_u['UNIT_TEMP_REAL'];
+																$UNIT_PVTT_FULL = $row_u['UNIT_PVTT_FULL'];//พลทหาร
+																$UNIT_PVTT_FILL = $row_u['UNIT_PVTT_FILL'];
+																$UNIT_PVTT_REAL = $row_u['UNIT_PVTT_REAL'];
+																$UNIT_CODE_KP = $row_u['UNIT_CODE'];
+																//echo $UNIT_CODE_KP;
+															//}
+															
+																echo'<tr>
+																	<tr>
+																		<th class="bg-info" style="width: 100px; text-align: center;">อัตราเต็ม</th>
+																		<td style="width: 100px; text-align: center;">'.$UNIT_COF_FULL.'</td>
+																		<td style="width: 100px; text-align: center;">'.$UNIT_NCO_FULL.'</td>
+																		<td style="width: 100px; text-align: center;">'.$UNIT_PVT_FULL.'</td>
+																		<td style="width: 100px; text-align: center;">'.$UNIT_PVTT_FULL.'</td>
+																		<td style="width: 100px; text-align: center;">'.$UNIT_EMPY_FULL.'</td>
+																		<td style="width: 100px; text-align: center;">'.$UNIT_TEMP_FULL.'</td>
+																	</tr>
+																	<tr>
+																		<th class="bg-info" style="width: 100px; text-align: center;">อัตราอนุมัติ</th>
+																		<td style="width: 100px; text-align: center;">'.$UNIT_COF_FILL.'</td>
+																		<td style="width: 100px; text-align: center;">'.$UNIT_NCO_FILL.'</td>
+																		<td style="width: 100px; text-align: center;">'.$UNIT_PVT_FILL.'</td>
+																		<td style="width: 100px; text-align: center;">'.$UNIT_PVTT_FILL.'</td>
+																		<td style="width: 100px; text-align: center;">'.$UNIT_EMPY_FILL.'</td>
+																		<td style="width: 100px; text-align: center;">'.$UNIT_TEMP_FILL.'</td>
+																	</tr>
+																	<tr>
+																		<th class="bg-info" style="width: 100px; text-align: center;">บรรจุจริง</th>
+																		<td style="width: 100px; text-align: center;">'.$UNIT_COF_REAL.'</td>
+																		<td style="width: 100px; text-align: center;">'.$UNIT_NCO_REAL.'</td>
+																		<td style="width: 100px; text-align: center;">'.$UNIT_PVT_REAL.'</td>
+																		<td style="width: 100px; text-align: center;">'.$UNIT_PVTT_REAL.'</td>
+																		<td style="width: 100px; text-align: center;">'.$UNIT_EMPY_REAL.'</td>
+																		<td style="width: 100px; text-align: center;">'.$UNIT_TEMP_REAL.'</td>
+																	</tr>
+																</tr>';
+															
+																									
+												echo'</tbody>
+											</table>';
+										}else{
+											echo'<table id="example1" class="table table-bordered table-striped">
+												<thead class="bg-info">                                                        
+													<tr>
+														<th style="text-align: center;">ประเภท</th>
+														<th style="text-align: center;">สัญญาบัตร</th>
+														<th style="text-align: center;">ประทวน</th>
+														<th style="text-align: center;">พลอาสาสมัคร</th>
+														<th style="text-align: center;">พลทหาร</th>
+													</tr>
+												</thead>
+												<tbody>';
+													
+														include ('connectpdo.php');
+															$sql_u = "SELECT * FROM j3_unit WHERE UNIT_CODE = :UNIT_ACM_ID";
+															$stmt_u=$db->prepare($sql_u);
+															$stmt_u->bindparam(':UNIT_ACM_ID',$UNIT_ACM_ID);
+															$stmt_u->execute();
+															$row_u=$stmt_u->fetch(PDO::FETCH_ASSOC);
+															//while($row2=$stmt2->fetch(PDO::FETCH_ASSOC)){
+																$UNIT_COF_FULL = $row_u['UNIT_COF_FULL'];//สัญญา
+																$UNIT_COF_FILL = $row_u['UNIT_COF_FILL'];
+																$UNIT_COF_REAL = $row_u['UNIT_COF_REAL'];
+																$UNIT_NCO_FULL = $row_u['UNIT_NCO_FULL'];//ประทวน
+																$UNIT_NCO_FILL = $row_u['UNIT_NCO_FILL'];
+																$UNIT_NCO_REAL = $row_u['UNIT_NCO_REAL'];
+																$UNIT_PVT_FULL = $row_u['UNIT_PVT_FULL'];//พลอาสา
+																$UNIT_PVT_FILL = $row_u['UNIT_PVT_FILL'];
+																$UNIT_PVT_REAL = $row_u['UNIT_PVT_REAL'];
+																$UNIT_EMPY_FULL = $row_u['UNIT_EMPY_FULL'];//ลูกจ้างประจำ
+																$UNIT_EMPY_FILL = $row_u['UNIT_EMPY_FILL'];
+																$UNIT_EMPY_REAL = $row_u['UNIT_EMPY_REAL'];
+																$UNIT_TEMP_FULL = $row_u['UNIT_TEMP_FULL'];//ลูกจ้างชั่ว
+																$UNIT_TEMP_FILL = $row_u['UNIT_TEMP_FILL'];
+																$UNIT_TEMP_REAL = $row_u['UNIT_TEMP_REAL'];
+																$UNIT_PVTT_FULL = $row_u['UNIT_PVTT_FULL'];//พลทหาร
+																$UNIT_PVTT_FILL = $row_u['UNIT_PVTT_FILL'];
+																$UNIT_PVTT_REAL = $row_u['UNIT_PVTT_REAL'];
+																$UNIT_CODE_KP = $row_u['UNIT_CODE'];
+																//echo $UNIT_CODE_KP;
+															//}
+																echo'<tr>
+																	<tr>
+																		<th class="bg-info" style="width: 100px; text-align: center;">อัตราเต็ม</th>
+																		<td style="width: 100px; text-align: center;">'.$UNIT_COF_FULL.'</td>
+																		<td style="width: 100px; text-align: center;">'.$UNIT_NCO_FULL.'</td>
+																		<td style="width: 100px; text-align: center;">'.$UNIT_PVT_FULL.'</td>
+																		<td style="width: 100px; text-align: center;">'.$UNIT_PVTT_FULL.'</td>
+																	</tr>
+																</tr>';
+															
+																									
+												echo'</tbody>
+											</table>';
+										}
+									?>
+								</div>
+								<div class="card-body">
+									<button class="tablink" onmouseover="openPage('Home1', this, 'white')">
+										<font style="font-weight: bold; font-size: 18px;">นามหน่วยถือทำเนียบ</font>
+									</button>
+									<button class="tablink" onmouseover="openPage('Sturc1', this, 'white')">
+										<font style="font-weight: bold; font-size: 18px;">นามหน่วยพิมพ์</font>
+									</button>
+									<button class="tablink" onmouseover="openPage('News1', this, 'white')">
+										<font style="font-weight: bold; font-size: 18px;">ทำเนียบกำลังพล</font>
+									</button>
+
+									<div id="Home1" class="tabcontent">
+										<div class="card-body">
+											<table id="example1" class="table table-bordered table-striped" style="width: 1500px;">
+												<tbody>
+													<?php                                                        
+														echo'<tr>
+															<th class="bg-info" rowspan="2" style="width: 150px; text-align: center; vertical-align: middle">สัญญาบัตร</th>';
+
+
+
+																$sql2 = "SELECT *,COUNT(ROST_ID) FROM j3_rost_transaction
+																WHERE ROST_NPARENT = :ACK_NUM_ID OR ROST_NUNIT = :UNIT_CODE_4 OR ROST_UNIT = :UNIT_CODE_5 OR ROST_PARENT = :UNIT_CODE_6 
+																GROUP BY ROST_RANK ORDER BY ROST_RANK";
+																$stmt2=$db->prepare($sql2);
+																$stmt2->bindparam(':ACK_NUM_ID',$ACK_NUM_ID);
+																$stmt2->bindparam(':UNIT_CODE_4',$UNIT_CODE_4);
+																$stmt2->bindparam(':UNIT_CODE_5',$UNIT_CODE_5);
+																$stmt2->bindparam(':UNIT_CODE_6',$UNIT_CODE_6);
+																$stmt2->execute();
+																while($row2=$stmt2->fetch(PDO::FETCH_ASSOC)){
+																	$COUNT = $row2['COUNT(ROST_ID)'];
+																	$ROST_RANK = $row2['ROST_RANK'];
+																	$ROST_RANKNAME = $row2['ROST_RANKNAME'];
+
+																$sql14= "SELECT * FROM j1_rank WHERE ROST_RANK = :ROST_RANK";
+																$stmt14=$db->prepare($sql14);
+																$stmt14->bindparam(':ROST_RANK',$ROST_RANK);
+																$stmt14->execute();		
+																$row79=$stmt14->fetch(PDO::FETCH_ASSOC);
+
+																$RANK_NAME = $row79['ROST_RANKNAME'];
+																				
+
+																	if($ROST_RANK == "02" || $ROST_RANK == "03" || $ROST_RANK == "04" || $ROST_RANK == "05" || $ROST_RANK == "06"
+																	|| $ROST_RANK == "07" || $ROST_RANK == "08" || $ROST_RANK == "09" || $ROST_RANK == "10"){
+
+
+
+
+																		echo '<th class="bg-info" style="width: 100px; text-align: center">'.$RANK_NAME.'</th>';
+																		
+																		
+																	}
+																}
+
+				
+
+															echo'<th class="bg-info" style="text-align: center;">รวม</th>
+															<tr>';
+
+																	$stmt2->execute();
+																	$SUM = "0";
+																	while($row2=$stmt2->fetch(PDO::FETCH_ASSOC)){
+																		$COUNT = $row2['COUNT(ROST_ID)'];
+																		$ROST_RANK = $row2['ROST_RANK'];
+
+																		
+																		//echo $ROST_RANK;
+
+																		if($ROST_RANK == "02" || $ROST_RANK == "03" || $ROST_RANK == "04" || $ROST_RANK == "05" || $ROST_RANK == "06"
+																		|| $ROST_RANK == "07" || $ROST_RANK == "08" || $ROST_RANK == "09" || $ROST_RANK == "10"){
+																			echo '<td style="width: 100px; text-align: center">
+																				<input type="text" class="form-control" name="CRAK" value="'.$COUNT.'">
+																			</td>';
+																			
+																			$SUM = $SUM+$COUNT;
+																		}
+																	}
+																echo'<td style="width: 100px; text-align: center"><input type="text" class="form-control" name="CRAK" value="'.$SUM.'"></td>
+																
+															</tr>
+														</tr>';
+													?>
+												</tbody>
+												<tbody>
+													<?php
+														echo'<tr>
+															<th class="bg-info" rowspan="2" style="width: 150px; text-align: center; vertical-align: middle">ประทวน</th>';
+															
+															include ('connectpdo.php');
+																	$sql2 = "SELECT *,COUNT(ROST_ID) FROM j3_rost_transaction
+																	WHERE ROST_NPARENT = :ACK_NUM_ID OR ROST_NUNIT = :UNIT_CODE_4 OR ROST_UNIT = :UNIT_CODE_5 OR ROST_PARENT = :UNIT_CODE_6 
+																	GROUP BY ROST_RANK ORDER BY ROST_RANK";
+																	$stmt2=$db->prepare($sql2);
+																	$stmt2->bindparam(':ACK_NUM_ID',$ACK_NUM_ID);
+																	$stmt2->bindparam(':UNIT_CODE_4',$UNIT_CODE_4);
+																	$stmt2->bindparam(':UNIT_CODE_5',$UNIT_CODE_5);
+																	$stmt2->bindparam(':UNIT_CODE_6',$UNIT_CODE_6);
+																	$stmt2->execute();
+																	$SUM = "0";
+																	while($row2=$stmt2->fetch(PDO::FETCH_ASSOC)){
+																		$COUNT = $row2['COUNT(ROST_ID)'];
+																		$ROST_RANK = $row2['ROST_RANK'];
+																		$ROST_RANKNAME = $row2['ROST_RANKNAME'];
+
+																		$sql15= "SELECT * FROM j1_rank WHERE ROST_RANK = :ROST_RANK";
+																		$stmt15=$db->prepare($sql15);
+																		$stmt15->bindparam(':ROST_RANK',$ROST_RANK);
+																		$stmt15->execute();		
+																		$row80=$stmt15->fetch(PDO::FETCH_ASSOC);
+
+																		$RANK_NAME = $row80['ROST_RANKNAME'];
+																		//echo $ROST_RANK;
+
+																		if($ROST_RANK == "21" || $ROST_RANK == "22" || $ROST_RANK == "25"){
+																			
+																			echo '<th class="bg-info" style="width: 100px; text-align: center">'.$RANK_NAME.'</th>';
+																		}
+																	}
+															
+															echo'<th class="bg-info" style="text-align: center;">รวม</th>
+															<tr>';
+																
+																	$stmt2->execute();
+																	$SUM = "0";
+																	while($row78=$stmt2->fetch(PDO::FETCH_ASSOC)){
+																		$COUNT = $row78['COUNT(ROST_ID)'];
+																		$ROST_RANK = $row78['ROST_RANK'];
+																		//echo $ROST_RANK;
+
+																		if($ROST_RANK == "21" || $ROST_RANK == "22" || $ROST_RANK == "25"){
+																			
+																			echo '<td style="width: 100px; text-align: center">
+																				<input type="text" class="form-control" name="CRAK" value="'.$COUNT.'">
+																			</td>';
+																			$SUM = $SUM+$COUNT;
+																		}
+																	}
+																
+																echo'<td style="width: 100px; text-align: center">
+																	<input type="text" class="form-control" name="CRAK" value="'.$SUM.'">
+																</td>
+															</tr>
+														</tr>';
+													?>                                                 
+												</tbody>
+												<tbody>                                                        
+													<tr>
+														<th class="bg-info" style="text-align: center; vertical-align: middle">พลอาสาสมัคร</th>
+														<?php
+															include ('connectpdo.php');
+															$sql2 = "SELECT *,COUNT(ROST_ID) FROM j3_rost_transaction
+															WHERE ROST_NPARENT = :ACK_NUM_ID OR ROST_NUNIT = :UNIT_CODE_4 OR ROST_UNIT = :UNIT_CODE_5 OR ROST_PARENT = :UNIT_CODE_6 
+															GROUP BY ROST_RANK ORDER BY ROST_RANK";
+															$stmt2=$db->prepare($sql2);
+															$stmt2->bindparam(':ACK_NUM_ID',$ACK_NUM_ID);
+															$stmt2->bindparam(':UNIT_CODE_4',$UNIT_CODE_4);
+															$stmt2->bindparam(':UNIT_CODE_5',$UNIT_CODE_5);
+															$stmt2->bindparam(':UNIT_CODE_6',$UNIT_CODE_6);
+															$stmt2->execute();
+															$SUM = "0";
+															while($row2=$stmt2->fetch(PDO::FETCH_ASSOC)){
+																$COUNT = $row2['COUNT(ROST_ID)'];
+																$ROST_RANK = $row2['ROST_RANK'];
+																//echo $ROST_RANK;
+
+																if($ROST_RANK == "31"){
+																	$SUM = $SUM+$COUNT;
+																	
+																}
+															}
+														?>
+														<td style="width: 100px; text-align: center">
+															<input type="text" class="form-control" name="CRAK" value="<?=$SUM?>">
+														</td>
+													</tr>
+												</tbody>
+												<tbody>
+													<tr>
+														<th class="bg-info" style="text-align: center; vertical-align: middle">ลูกจ้างประจำ</th>
+														<?php
+															include ('connectpdo.php');
+															$sql2 = "SELECT *,COUNT(ROST_ID) FROM j3_rost_transaction
+															WHERE ROST_NPARENT = :ACK_NUM_ID OR ROST_NUNIT = :UNIT_CODE_4 OR ROST_UNIT = :UNIT_CODE_5 OR ROST_PARENT = :UNIT_CODE_6
+															GROUP BY ROST_RANK ORDER BY ROST_RANK";
+															$stmt2=$db->prepare($sql2);
+															$stmt2->bindparam(':ACK_NUM_ID',$ACK_NUM_ID);
+															$stmt2->bindparam(':UNIT_CODE_4',$UNIT_CODE_4);
+															$stmt2->bindparam(':UNIT_CODE_5',$UNIT_CODE_5);
+															$stmt2->bindparam(':UNIT_CODE_6',$UNIT_CODE_6);
+															$stmt2->execute();
+															$SUM = "0";
+															while($row2=$stmt2->fetch(PDO::FETCH_ASSOC)){
+																$COUNT = $row2['COUNT(ROST_ID)'];
+																$ROST_RANK = $row2['ROST_RANK'];
+															
+
+																if($ROST_RANK == "50" || $ROST_RANK =="51"){
+																	$SUM = $SUM+$COUNT;
+																	
+																}
+															}
+														?>
+														<td style="width: 100px; text-align: center">
+															<input type="text" class="form-control" name="CRAK" value="<?=$SUM?>">
+														</td>
+													</tr>                                                   
+												</tbody>
+												<tbody>
+													<tr>
+														<th class="bg-info" style="text-align: center; vertical-align: middle">พลทหาร</th>
+														<?php
+															include ('connectpdo.php');
+															$sql2 = "SELECT *,COUNT(ROST_ID) FROM j3_rost_transaction
+															WHERE ROST_NPARENT = :ACK_NUM_ID OR ROST_NUNIT = :UNIT_CODE_4 OR ROST_UNIT = :UNIT_CODE_5 OR ROST_PARENT = :UNIT_CODE_6
+															GROUP BY ROST_RANK ORDER BY ROST_RANK";
+															$stmt2=$db->prepare($sql2);
+															$stmt2->bindparam(':ACK_NUM_ID',$ACK_NUM_ID);
+															$stmt2->bindparam(':UNIT_CODE_4',$UNIT_CODE_4);
+															$stmt2->bindparam(':UNIT_CODE_5',$UNIT_CODE_5);
+															$stmt2->bindparam(':UNIT_CODE_6',$UNIT_CODE_6);
+															$stmt2->execute();
+															$SUM = "0";
+															while($row2=$stmt2->fetch(PDO::FETCH_ASSOC)){
+																$COUNT = $row2['COUNT(ROST_ID)'];
+																$ROST_RANK = $row2['ROST_RANK'];
+																
+
+																if($ROST_RANK == "32"){
+																	$SUM = $SUM+$COUNT;
+																}
+															}
+														?>
+														<td style="width: 100px; text-align: center">
+															<input type="text" class="form-control" name="CRAK" value="<?=$SUM?>">
+														</td>
+													</tr>                                                   
+												</tbody>
+											</table>
+										</div>
+									</div>
+									<div id="Sturc1" class="tabcontent">
+										<?php
+											include ('connectpdo.php');
+											$sql3 = "SELECT * FROM j3_nrpt_transaction WHERE NRPT_UNIT_PARENT = :UNIT_CODE_4";
+											$stmt3=$db->prepare($sql3);
+											$stmt3->bindparam(':UNIT_CODE_4',$UNIT_CODE_4);
+											$stmt3->execute();
+												$i = "0";
+												while($row3=$stmt3->fetch(PDO::FETCH_ASSOC)){
+													$SUB1 = substr($row3['UNIT_CODE'],6);
+													
+													if($SUB1 != "0001" && $SUB1 != "0002" && $SUB1 != "0003" && $SUB1 != "9999" && $SUB1 != "9998"  && $SUB1 != "0900"){
+														if($row3['NRPT_UNIT_PARENT'] == $UNIT_CODE_4){
+															$UNIT3 = $row3['UNIT_CODE'];
+															$SUB = substr($UNIT_CODE_4,0,2);
+															$i++;
+															echo '
+																<div class="card card-outline card-success">
+																	<div class="card-header">
+																		<div class="card-body">
+																			<div class="row">
+																				<label style="text-align: center;">รหัสหน่วย :</label>
+																				<div class="col-sm-2" style="text-align: center;">
+																					<input type="text" class="form-control" value="'.$UNIT3.'" disabled>   
+																				</div> 
+																				<label>รหัสส่วนราชการ :</label>
+																				<div class="col-sm-1" style="text-align: center;">
+																					<input type="text" class="form-control" value="'.$SUB.'" disabled>
+																				</div>
+																				<label>ลำดับที่ :</label>
+																				<div class="col-sm-1">
+																					<input type="text" class="form-control" value="" disabled>
+																				</div>
+																				<label>รหัสหน่วยใหม่ :</label>
+																				<div class="col-sm-2">
+																					<input type="text" class="form-control" value="'.$UNIT3.'" disabled>
+																				</div>
+																				<label>รหัสหน่วยขึ้นหน้าใหม่ :</label>
+																				<div class="col-sm-1">
+																					<input type="text" class="form-control" value="" disabled>
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+																	<div class="card-body">
+																		<div class="row">
+																			<div class="col-12 col-sm-6">
+																				<div class="form-group">
+																					<label>นามหน่วยเต็ม</label>
+																					<input type="text" class="form-control" name="NRPT_NAME" value="'.$row3['NRPT_NAME'].'" readonly>
+																				</div>
+																			</div>
+																			<div class="col-12 col-sm-6">
+																				<div class="form-group">
+																					<label>นามหน่วยภาษาอังกฤษ</label>
+																					<input type="text" class="form-control" name="UNIT_CODE" readonly>
+																				</div>
+																			</div>
+																			<div class="col-12 col-sm-6">
+																				<div class="form-group">
+																					<label>นามหน่วยย่อ</label>
+																					<input type="text" class="form-control" name="NRPT_ACM" value="'.$row3['NRPT_ACM'].'" readonly>
+																				</div>
+																			</div>
+																			<div class="col-12 col-sm-6">
+																				<div class="form-group">
+																					<label>นามหน่วยภาษาอังกฤษย่อ</label>
+																					<input type="text" class="form-control" name="UNIT_NAME" readonly>
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+																</div>';
+																$sql7 = "SELECT * FROM j3_nrpt_transaction WHERE NRPT_UNIT_PARENT = :UNIT3";
+																$stmt7=$db->prepare($sql7);
+																$stmt7->bindparam(':UNIT3',$UNIT3);
+																$stmt7->execute();
+																$row7=$stmt7->fetch(PDO::FETCH_ASSOC);
+																							
+																if($row7['NRPT_UNIT_PARENT'] == $UNIT3){
+																	$stmt7->execute();
+																	while($row7=$stmt7->fetch(PDO::FETCH_ASSOC)){
+																		$parent1 = $row7['NRPT_UNIT_PARENT'];
+																			if($row7['NRPT_UNIT_PARENT'] == $UNIT3){
+																				$UNIT4 = $row7['UNIT_CODE'];
+																										
+																				echo '<div class="card card-outline card-danger">
+																				<div class="card-body">
+																					<div class="card-header">
+																						<div class="card-body">
+																							<div class="row">
+																								<label style="text-align: center;">รหัสหน่วย :</label>
+																								<div class="col-sm-2" style="text-align: center;">
+																									<input type="text" class="form-control" value="'.$UNIT4.'" disabled>   
+																								</div> 
+																								<label>รหัสส่วนราชการ :</label>
+																								<div class="col-sm-1" style="text-align: center;">
+																									<input type="text" class="form-control" value="'.$SUB.'" disabled>
+																								</div>
+																								<label>ลำดับที่ :</label>
+																								<div class="col-sm-1">
+																									<input type="text" class="form-control" value="" disabled>
+																								</div>
+																								<label>รหัสหน่วยใหม่ :</label>
+																								<div class="col-sm-2">
+																									<input type="text" class="form-control" value="'.$UNIT4.'" disabled>
+																								</div>
+																								<label>รหัสหน่วยขึ้นหน้าใหม่ :</label>
+																								<div class="col-sm-1">
+																									<input type="text" class="form-control" value="" disabled>
+																								</div>
+																							</div>
+																						</div>
+																					</div>
+																					<div class="row">
+																						<div class="col-12 col-sm-6">
+																							<div class="form-group">
+																								<label>นามหน่วยเต็ม</label>
+																								<input type="text" class="form-control" name="NRPT_NAME" value="'.$row7['NRPT_NAME'].'" readonly>
+																							</div>
+																						</div>
+																						<div class="col-12 col-sm-6">
+																							<div class="form-group">
+																								<label>นามหน่วยภาษาอังกฤษ</label>
+																								<input type="text" class="form-control" name="UNIT_CODE" readonly>
+																							</div>
+																						</div>
+																						<div class="col-12 col-sm-6">
+																							<div class="form-group">
+																								<label>นามหน่วยย่อ</label>
+																								<input type="text" class="form-control" name="NRPT_ACM" value="'.$row7['NRPT_ACM'].'" readonly>
+																							</div>
+																						</div>
+																						<div class="col-12 col-sm-6">
+																							<div class="form-group">
+																								<label>นามหน่วยภาษาอังกฤษย่อ</label>
+																								<input type="text" class="form-control" name="UNIT_NAME" readonly>
+																							</div>
+																						</div>
+																					</div>
+																				</div>
+																			</div>';
+																										
+																		}
+																	}
+																}
+															}
+														}	
+													}
 												?>
-												<tr>
-													<td style="width: 160px; text-align: center;"><?=$UNIT_CODE?></td>
-													<td style="width: 170px; text-align: center;"><?=$NRPT_UNIT_PARENT?></td>
-													<td style="width: 500px;"><?=$NRPT_NAME?></td>
-													<td style="width: 180px;"><?=$NRPT_ACM?></td>
-													<td style="width: 220px; text-align: center;">
-														<a class="btn btn-info btn-sm" href="detail_ack.php?id=<?=$UNIT_CODE;?>&name=<?=$UNIT_CODE;?>&nickname=<?=$UNIT_CODE;?>&lastname=<?=$UNIT_CODE?>">
-															<i class="fas fa-pencil-alt">
-															</i>
-															DETAIL
-														</a>
-														<a class="btn btn-danger btn-sm" href="delete_data.php?id=<?=$UNIT_CODE?>">
-															<i class="fas fa-trash">
-															</i>
-															DELETE
-														</a>
-													</td>
-												</tr>
-											<?php } ?>
-
-
-										</tbody>
-									</table>
+									</div>									
+									<div id="News1" class="tabcontent">
+										<iframe
+											src="iframe_unit_ack.php?id=<?=$UNIT_CODE_2;?>&name=<?=$UNIT_CODE_2;?>&nickname=<?=$UNIT_CODE_2;?>&lastname=<?=$UNIT_CODE_2?>"
+											frameborder="0" width="100%" height="800"></iframe>
+									</div>
 								</div>
 							</div>
-						</div>		
+						</div>	
 						<div class="col-md-12">
 							<div class="card">
 								<div class="card-body">
@@ -149,7 +757,7 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
 									?>
 
 									<div id="Home" class="tabcontent">
-										<a href="export_word1.php?id=<?=$ACK_NUM_ID?>"><button type="button" class="btn btn-primary"><i class="fas fa-file-word"></i> WORD</button></a>
+										<a href="export_word.php?id=<?=$ACK_NUM_ID?>"><button type="button" class="btn btn-primary"><i class="fas fa-file-word"></i> WORD</button></a>
 										<a href="report_ack.php?id=<?=$ACK_NUM_ID?>"><button type="button" class="btn btn-danger"><i class="fas fa-file-pdf"></i> PDF</button></a><br><br>
 										<div class="form-group">
 											<label for="exampleTextarea1"><font style="font-weight: bold; font-size: 18px;">ภารกิจ :</font></label>
@@ -175,7 +783,7 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
 										<div style="text-align: center;">
 											<?php
 											include ('connectpdo.php');
-											$sql6 = "SELECT * FROM j3_nrpt_approve WHERE UNIT_CODE = :UNIT_CODE_2" ;
+											$sql6 = "SELECT * FROM j3_nrpt_transaction WHERE UNIT_CODE = :UNIT_CODE_2" ;
 											$stmt6=$db->prepare($sql6);
 											$stmt6->bindparam(':UNIT_CODE_2',$UNIT_CODE_2);
 											$stmt6->execute();
@@ -188,7 +796,7 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
 											'. $row6['NRPT_ACM'] .'
 											</span>';
 											if($data == $UNIT_CODE_2){
-												$sql8 = "SELECT * FROM j3_nrpt_approve WHERE NRPT_UNIT_PARENT = :data" ;
+												$sql8 = "SELECT * FROM j3_nrpt_transaction WHERE NRPT_UNIT_PARENT = :data" ;
 												$stmt8=$db->prepare($sql8);
 												$stmt8->bindparam(':data',$data);
 												$stmt8->execute();
@@ -208,7 +816,7 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
 																'. $row8['NRPT_ACM'] .'
 																</span>';
 																				//$row8['UNIT_CODE'] != "6150000001" && $row8['UNIT_CODE'] != "6150000002" && $row8['UNIT_CODE'] != "6150000003" && 
-																				$sql7 = "SELECT * FROM j3_nrpt_approve WHERE NRPT_UNIT_PARENT = :send";
+																				$sql7 = "SELECT * FROM j3_nrpt_transaction WHERE NRPT_UNIT_PARENT = :send";
 																				$stmt7=$db->prepare($sql7);
 																				$stmt7->bindparam(':send',$send);
 																				$stmt7->execute();
@@ -249,15 +857,20 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
 
 													<div id="News" class="tabcontent"> 
 														<button type="button" id="link_modal" data-toggle="modal" data-target="#modalPersonal" class="btn btn-info editbtn"><i class="fas fa-plus"></i></button></a>
-														<a href="report_p_ack.php?id=<?=$UNIT_CODE_2;?>&name=<?=$UNIT_CODE_2;?>&nickname=<?=$UNIT_CODE_2;?>&lastname=<?=$UNIT_CODE_2?>&id5=<?=$ACK_NUM_ID?>"><button type="button" class="btn btn-danger"><i class="fas fa-file-pdf"></i> Print</button></a>
+														<a href="report_sum_ack_approve.php?id=<?=$UNIT_CODE1;?>&name=<?=$UNIT_CODE1;?>&nickname=<?=$UNIT_CODE1;?>&lastname=<?=$UNIT_CODE1?>&id5=<?=$ACK_NUM_ID?>"><button type="button" class="btn btn-primary"><i class="fas fa-file-word"></i> ปะหน้า</button></a>
+													    <a href="report_iframe_ack_approve.php?id=<?=$UNIT_CODE1;?>&name=<?=$UNIT_CODE1;?>&nickname=<?=$UNIT_CODE1;?>&lastname=<?=$UNIT_CODE1?>&id5=<?=$ACK_NUM_ID?>"><button type="button" class="btn btn-success"><i class="fas fa-file-word"></i> อัตรากำลังพล</button></a>
+													    <a href="report_sum_p_ack_approve.php?id=<?=$UNIT_CODE_2;?>&name=<?=$UNIT_CODE_2;?>&nickname=<?=$UNIT_CODE_2;?>&lastname=<?=$UNIT_CODE_2?>&id5=<?=$ACK_NUM_ID?>"><button type="button" class="btn btn-danger"><i class="fas fa-file-word"></i> ปะหลัง</button></a>
+													    <br>
 														<div class="card-body">
 															<table id="example3" class="table table-bordered table-striped">
 																<thead class="bg-blue">                                                        
 																	<tr>
-																		<th style="text-align: center;">เลขประจำตำแหน่ง</th>
+																		<th style="text-align: center;">ลำดับ</th>
+																		<th style="text-align: center;">รหัสประจำตำแหน่ง</th>
 																		<th>ชื่อตำแหน่ง</th>
 																		<th>ตำแหน่งย่อ</th>
-																		<th style="text-align: center;">หมายเลข 12 หลัก</th>
+																		<th style="text-align: center;">อัตรา</th>
+																		<th style="text-align: center;">รหัสกรมบัญชีกลาง</th>
 																		<th style="text-align: center;">Manage</th>
 																	</tr>
 																</thead>
@@ -280,6 +893,10 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
 														$RATE_P_VERSION = $row2['RATE_P_VERSION'];
 														$ROSTT_ID = $row2['ROST_ID'];
 														$ROST_OLD_ID = $row2['ROST_OLD_ID'];*/
+
+														$i = 0;
+
+					
 														$sql5 ="SELECT * FROM j3_ack WHERE ACK_NUM_ID = :ACK_NUM_ID";
 														$stmt5=$db->prepare($sql5);
 														$stmt5->bindparam(':ACK_NUM_ID',$ACK_NUM_ID);
@@ -303,11 +920,15 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
 															$ACK_TIMESTAMP = $row5['ACK_TIMESTAMP'];
 															$ACK_STS = $row5['ACK_STS'];
 															$ACK_VERSION = $row5['ACK_VERSION'];
-															$sql3 = "SELECT * FROM j3_rost_approve WHERE ROST_NUNIT = :UNIT_CODE_2";
+
+
+															$sql3 = "SELECT *,COUNT(ROST_ID) FROM j3_rost_transaction WHERE ACK_NUM_ID LIKE '".$ACK_NUM_ID."' GROUP BY ROST_POSNAME_ACM  
+																ORDER BY `j3_rost_transaction`.`ROST_ID` ASC";
 															$stmt3=$db->prepare($sql3);
 															$stmt3->bindparam(':UNIT_CODE_2',$UNIT_CODE_2);
 															$stmt3->execute();
 															while($row3=$stmt3->fetch(PDO::FETCH_ASSOC)){
+																$COUNT = $row3['COUNT(ROST_ID)'];
 																$ROST_UNIT = $row3['ROST_UNIT'];
 																$ROST_CPOS = $row3['ROST_CPOS'];
 																$ROST_POSNAME = $row3['ROST_POSNAME'];
@@ -320,16 +941,32 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
 																$ROST_PARENT = $row3['ROST_PARENT'];	
 																$ROST_NUNIT = $row3['ROST_NUNIT'];	
 																$ROST_NPARENT = $row3['ROST_NPARENT'];
+
+																$i++;
+
+															
+
 																?>
 																<tr>
-																	<td style="width: 180px; text-align: center;"><?=$ROST_CPOS?></td>
+																	<td style="width: 20px; text-align: center;"><?=$i?></td>
+																	<td style="width: 150px; text-align: center;"><?=$ROST_CPOS?></td>
 																	<td style="width: 600px;"><?=$ROST_POSNAME?></td>
 																	<td style="width: 350px;"><?=$ROST_POSNAME_ACM?></td>
+																	<td style="width: 20px; text-align: center;">
+																		<?php
+																		if($ROST_RANK == "19" || $ROST_RANK == "29"){
+																			echo '-';
+																		}elseif($ROST_RANK != "19" || $ROST_RANK != "29"){
+																			echo $COUNT;
+																		}
+																		?>
+																		
+																	</td>
 																	<td style="width: 150px; text-align: center;"><?=$ROST_NCPOS12?></td>
 																	<td style="text-align: center;">        
 																		<div class="table-actions">
 																			<button type="button" id="link_modal" data-toggle="modal" data-target="#EditModal" data-id="<?=$ROST_ID;?>" class="btn btn-success btn-sm editbtn"><i class="fas fa-pencil-alt"></i></button></a>
-																			<a href='#'><button type="button" class="btn btn-icon btn-sm btn-danger"><i class="fas fa-ban"></i></button></a>
+																			<a href='delete_rate_p.php?id3=<?=$ROST_ID?>&id4=<?=$ACK_NUM_ID?>' onclick="return confirm('คุณต้องการลบรายการนี้ ใช่หรือไม่ ?')"><button type="button" class="btn btn-icon btn-sm btn-danger"><i class="fas fa-ban"></i></button></a>
 																		</div>
 																	</td>
 																</tr>
@@ -340,10 +977,11 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
 											</div>
 
 											<div id="Contact" class="tabcontent">
+												<a href="export_word_explan.php?id=<?=$ACK_NUM_ID?>"><button type="button" class="btn btn-primary"><i class="fas fa-file-word"></i> WORD</button></a>
 												<a href="report_4.php?id=<?=$ACK_NUM_ID?>"><button type="button" class="btn btn-danger"><i class="fas fa-file-pdf"></i> Print</button></a><br><br>
 												<div class="form-group">
 													<label for="exampleTextarea1"><font style="font-weight: bold; font-size: 18px;">คำชี้แจง :</font></label>
-													<textarea class="form-control" id="editor4" rows="4" name="ACK_DIVISION" style="border-width:1px; border-color: gray;font-weight: bold; font-size: 18px;" DISABLED><?=$ACK_E?></textarea>
+													<textarea class="form-control" id="editor4" rows="4" name="ACK_EXPLANATION" style="border-width:1px; border-color: gray;font-weight: bold; font-size: 18px;" DISABLED><?=$ACK_E?></textarea>
 												</div>	
 											</div>
 
@@ -534,15 +1172,16 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
 								</div>
 								<div class="form-group col-md-2">
 									<label><b>รหัสประจำตำแหน่ง</b></label>
-									<input type="text" class="form-control form-control-inverse" name="ROST_CPOS" id="ROST_CPOS"  >
+									<input type="text" class="form-control form-control-inverse" name="ROST_CPOS" id="ROST_CPOS">
 								</div>
-								<div class="form-group col-md-5">
+								<div class="form-group col-md-5 ROST_POSNAME_2">
 									<label><b>ตำแหน่งหน้าที่</b></label>
-									<input type="text" class="form-control form-control-inverse" name="ROST_POSNAME" id="ROST_POSNAME" readonly="true">
+									<input type="text" class="form-control form-control-inverse" name="ROST_POSNAME" id="ROST_POSNAME_2">
+									<div id="list_3"></div>
 								</div>
 								<div class="form-group col-md-3">
 									<label><b>ตำแหน่งหน้าที่(ย่อ)</b></label>
-									<input type="text" class="form-control form-control-inverse" name="ROST_POSNAME_ACM" readonly="true">
+									<input type="text" class="form-control form-control-inverse" name="ROST_POSNAME_ACM">
 								</div>
 							</div>
 							<div class="form-row">
@@ -564,7 +1203,7 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
 								</div>
 								<div class="form-group col-md-2">
 									<label for="inputPassword4"><b>ชั้นยศ</b></label>
-									<select class="form-control form-control-inverse" name="ROST_RANK">
+									<select class="form-control form-control-inverse" name="RATE_P_RANK">
 										<option selected>กรุณาเลือก...</option>
 										<?php
 										include ('connect.php');
@@ -578,29 +1217,21 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
 								</div>
 								<div class="form-group col-md-2">
 									<label for="inputPassword4"><b>กำเนิดสายวิทยาการ</b></label>
-									<select class="form-control form-control-inverse" name="RATE_P_RANK">
+									<select class="form-control form-control-inverse" name="LAO_ID">
 										<option value="">กรุณาเลือก...</option>
 										<?php
-										$sql = "SELECT * FROM j3_rebirth";
+										$sql = "SELECT * FROM j3_lao";
 										$res = mysqli_query($conn, $sql);
 										while($row= mysqli_fetch_assoc($res)) {
-											echo '<option value="'.$row['CLAO_NAME_SHORT'].'">'.$row['CLAO_NAME_FULL'].'</option>';
+											echo '<option value="'.$row['ID'].'">'.$row['LAO_NAME'].'</option>';
 										}
 										?>
 									</select>
 								</div>
-									<div class="form-group col-md-2">
+									<div class="form-group col-md-2 D_ID_2">
 									<label for="inputPassword4"><b>กลุ่มงาน</b></label>
-									<select class="form-control form-control-inverse" name="RATE_P_GROUP_WORK">
-										<option value="">กรุณาเลือก...</option>
-										<?php
-										$sql = "SELECT * FROM j3_rebirth";
-										$res = mysqli_query($conn, $sql);
-										while($row= mysqli_fetch_assoc($res)) {
-											echo '<option value="'.$row['CLAO_NAME_SHORT'].'">'.$row['CLAO_NAME_FULL'].'</option>';
-										}
-										?>
-									</select>
+									<input type="text" class="form-control form-control-inverse" id="D_ID_2" require>
+									<div id="list_d_2"></div>
 								</div>
 								<div class="form-group col-md-2">
 									<label for="inputPassword4"><b>เหล่า</b></label>
@@ -612,6 +1243,7 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
 										<option>-</option>
 									</select>
 								</div>
+								<input type="hidden" name="D_ID_2">
 					<!--	<div class="form-group col-md-2">
 							<label><b>เหล่า</b></label>
 							<select class="form-control form-control-inverse" name="ROST_LAO_MAJ">
@@ -674,7 +1306,7 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
 
 <div class="modal fade" id="modalPersonal">
 	<div class="modal-dialog modal-xl">
-		<form method="post" id="user_form" enctype="multipart/form-data" action="ct_create_p_ack.php">
+		<form method="post" id="per_form" enctype="multipart/form-data" action="ct_create_p_ack.php">
 			<div class="modal-content">
 				<div class="modal-body">
 					<input type="hidden" name="upd_id" id="upd_id">
@@ -711,7 +1343,7 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
 								<select class="form-control form-control-inverse" name="ROST_NPARENT" require>
 								<option selected>กรุณาเลือก</option>
 									<?php
-									$sql_nrpt_approve = "SELECT ROST_NPARENT FROM j3_rost_approve WHERE ROST_NUNIT = :UNIT_CODE_2 GROUP BY ROST_NPARENT ";
+									$sql_nrpt_approve = "SELECT ROST_NPARENT FROM j3_rost_transaction WHERE ROST_NUNIT = :UNIT_CODE_2 GROUP BY ROST_NPARENT ";
 									$stmt_nrpt_approve=$db->prepare($sql_nrpt_approve);
 									$stmt_nrpt_approve->bindparam(':UNIT_CODE_2',$UNIT_CODE_2);
 									$stmt_nrpt_approve->execute();
@@ -726,7 +1358,7 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
 							<select class="form-control form-control-inverse" name="ROST_RANK" require>
 										<option selected>กรุณาเลือก...</option>
 										<?php
-										$sql_nrpt_approve1 = "SELECT ROST_UNIT FROM j3_rost_approve WHERE ROST_NUNIT = :UNIT_CODE_2 GROUP BY ROST_UNIT ";
+										$sql_nrpt_approve1 = "SELECT ROST_UNIT FROM j3_rost_transaction WHERE ROST_NUNIT = :UNIT_CODE_2 GROUP BY ROST_UNIT ";
 										$stmt_nrpt_approve1=$db->prepare($sql_nrpt_approve1);
 										$stmt_nrpt_approve1->bindparam(':UNIT_CODE_2',$UNIT_CODE_2);
 										$stmt_nrpt_approve1->execute();
@@ -763,10 +1395,10 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
 										?>
 									</select>
 								</div>
-									<div class="form-group col-md-2 D_ID">
+									<div class="form-group col-md-2 D_ID_1">
 									<label for="inputPassword4"><b>กลุ่มงาน</b></label>
-									<input type="text" class="form-control form-control-inverse" id="D_ID" require>
-									<div id="list_d"></div>
+									<input type="text" class="form-control form-control-inverse" id="D_ID_1" require>
+									<div id="list_d_1"></div>
 								</div>
 								<div class="form-group col-md-2">
 									<label for="inputPassword4"><b>เหล่า</b></label>
@@ -778,7 +1410,7 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
 										<option>-</option>
 									</select>
 								</div>
-								<input type="hidden" name="D_ID">
+								<input type="hidden" name="D_ID_1">
 					<!--	<div class="form-group col-md-2">
 							<label><b>เหล่า</b></label>
 							<select class="form-control form-control-inverse" name="ROST_LAO_MAJ">
@@ -1006,6 +1638,30 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
       });  
  });  
  </script>
+ <script>  
+ $(document).ready(function(){  
+      $('#ROST_POSNAME_2').keyup(function(){  
+           var query = $(this).val();  
+           if(query != '')  
+           {  
+                $.ajax({  
+                     url:"data_cpos.php",  
+                     method:"POST",  
+                     data:{query:query},  
+                     success:function(data)  
+                     {  
+                          $('#list_3').fadeIn();  
+                          $('#list_3').html(data);   
+                     }  
+                });  
+           }  
+      });  
+      $(document).on('click', '.ROST_POSNAME_2 ul li', function(){ 
+           $('#ROST_POSNAME_2').val($(this).text());  
+           $('#list_3').fadeOut();
+      });  
+ });  
+ </script>
 <script>
 	$(document).ready(function () {
 		$('#EditModal').on('show.bs.modal', function (event) {
@@ -1054,12 +1710,12 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
 		var _this = $(this)
 		$.ajax({
 			type: "POST",
-			url: "query_p_ack.php",
+			url: "query_p_ack_edit.php",
 			data: _this.serialize()+"&do=updatedata_p_ack",
-			dataType: "json",
+			// dataType: "json",
 			success: function (response) {
 				console.log(response)
-				alert('บันทึกข้อมูลเรียบร้อยแล้ว')
+				// alert('บันทึกข้อมูลเรียบร้อยแล้ว')
 			}
 		});
 		event.preventDefault()
@@ -1103,14 +1759,11 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
 			]
 		});
 	}
-
-
 	$('#modalPersonal select[name="ROST_NPARENT"]').on('change', function () {
 		var _this = $(this)
 		var rost_nparent= $(this).val()
 		var rost_postname = $('#modalPersonal input[name="ROST_POSNAME"]').attr('old-value')
 		var rost_postname_acm = $('#modalPersonal input[name="ROST_POSNAME_ACM"]').attr('old-value')
-
 		$.ajax({
 			type: "POST",
 			url: "data_cpos.php",
@@ -1118,33 +1771,26 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
 			dataType: "json",
 			success: function (response) {
 				console.log(response)
-				$('#modalPersonal input[name="ROST_POSNAME"]').val(rost_postname + ' ' + response.NRPT_NAME)
+				$('#modalPersonal input[name="ROST_POSNAME"]').val(rost_postname +response.NRPT_NAME)
 				$('#modalPersonal input[name="ROST_POSNAME_ACM"]').val(rost_postname_acm +response.NRPT_ACM)
 				_this.attr('old-value' , response.NRPT_NAME)
 				_this.attr('old-value-acm' , response.NRPT_ACM)
 			}
 		});
 	});
-
-
 	$(document).on("click",'li[class="form-control form-control-inverse form-main"]',function() {
     	$('#modalPersonal input[name="ROST_POSNAME"]').attr('old-value', $(this).text() )
 		$('#modalPersonal input[name="ROST_CPOS"]').val( $(this).attr('attr-rost-cpos') )
 		$('#modalPersonal input[name="ROST_POSNAME_ACM"]').val( $(this).attr('attr-rost-cpos-acm') )
-
 		$('#modalPersonal input[name="ROST_CPOS"]').attr('old-value' , $(this).attr('attr-rost-cpos'))
 		$('#modalPersonal input[name="ROST_POSNAME_ACM"]').attr('old-value' , $(this).attr('attr-rost-cpos-acm'))
-
 	});
-
 	$('#modalPersonal select[name="ROST_RANK"]').on('change', function () {
 		var _this = $(this)
 		var rost_nparent=  $('#modalPersonal select[name="ROST_NPARENT"]').attr('old-value')
 		var rost_postname = $('#modalPersonal input[name="ROST_POSNAME"]').attr('old-value')
-
 		var rost_nparent_acm =  $('#modalPersonal select[name="ROST_NPARENT"]').attr('old-value-acm')
 		var rost_postname_acm = $('#modalPersonal input[name="ROST_POSNAME_ACM"]').attr('old-value')
-
 		$.ajax({
 			type: "POST",
 			url: "data_cpos.php",
@@ -1152,25 +1798,63 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
 			dataType: "json",
 			success: function (response) {
 				console.log(response)
-				$('#modalPersonal input[name="ROST_POSNAME"]').val(rost_postname + response.NRPT_NAME + ' ' + rost_nparent)
 				if (response.NRPT_ACM != rost_nparent_acm){
-					$('#modalPersonal input[name="ROST_POSNAME_ACM"]').val(rost_postname_acm + response.NRPT_ACM.split(".")[1] + ' ' + rost_nparent_acm)
-				}else{
-					$('#modalPersonal input[name="ROST_POSNAME_ACM"]').val(rost_postname_acm + rost_nparent_acm)
-				}
-
-
-				
-				
+				     $('#modalPersonal input[name="ROST_POSNAME_ACM"]').val(rost_postname_acm + response.NRPT_ACM.split(".")[1] + rost_nparent_acm)
+				    }else{
+				     $('#modalPersonal input[name="ROST_POSNAME_ACM"]').val(rost_postname_acm + rost_nparent_acm)
+				    }	
 			}
 		});
-
 	});
-
-
-
+	$('#EditModal select[name="ROST_NPARENT"]').on('change', function () {
+		var _this = $(this)
+		var rost_nparent= $(this).val()
+		var rost_postname = $('#EditModal input[name="ROST_POSNAME"]').attr('old-value')
+		var rost_postname_acm = $('#EditModal input[name="ROST_POSNAME_ACM"]').attr('old-value')
+		$.ajax({
+			type: "POST",
+			url: "data_cpos.php",
+			data: {do:'get_NRPT_NAME' , ROST_NPARENT:rost_nparent},
+			dataType: "json",
+			success: function (response) {
+				console.log(response)
+				$('#EditModal input[name="ROST_POSNAME"]').val(rost_postname +response.NRPT_NAME)
+				$('#EditModal input[name="ROST_POSNAME_ACM"]').val(rost_postname_acm +response.NRPT_ACM)
+				_this.attr('old-value' , response.NRPT_NAME)
+				_this.attr('old-value-acm' , response.NRPT_ACM)
+			}
+		});
+	});
+	$(document).on("click",'li[class="form-control form-control-inverse form-main"]',function() {
+    	$('#EditModal input[name="ROST_POSNAME"]').attr('old-value', $(this).text() )
+		$('#EditModal input[name="ROST_CPOS"]').val( $(this).attr('attr-rost-cpos') )
+		$('#EditModal input[name="ROST_POSNAME_ACM"]').val( $(this).attr('attr-rost-cpos-acm') )
+		$('#EditModal input[name="ROST_CPOS"]').attr('old-value' , $(this).attr('attr-rost-cpos'))
+		$('#EditModal input[name="ROST_POSNAME_ACM"]').attr('old-value' , $(this).attr('attr-rost-cpos-acm'))
+	});
+	$('#EditModal select[name="ROST_RANK"]').on('change', function () {
+		var _this = $(this)
+		var rost_nparent=  $('#EditModal select[name="ROST_NPARENT"]').attr('old-value')
+		var rost_postname = $('#EditModal input[name="ROST_POSNAME"]').attr('old-value')
+		var rost_nparent_acm =  $('#EditModal select[name="ROST_NPARENT"]').attr('old-value-acm')
+		var rost_postname_acm = $('#EditModal input[name="ROST_POSNAME_ACM"]').attr('old-value')
+		$.ajax({
+			type: "POST",
+			url: "data_cpos.php",
+			data: {do:'get_NRPT_NAME' , ROST_NPARENT:_this.val()},
+			dataType: "json",
+			success: function (response) {
+				console.log(response)
+				if (response.NRPT_ACM != rost_nparent_acm){
+				     $('#EditModal input[name="ROST_POSNAME_ACM"]').val(rost_postname_acm + response.NRPT_ACM.split(".")[1] + rost_nparent_acm)
+				    }else{
+				     $('#EditModal input[name="ROST_POSNAME_ACM"]').val(rost_postname_acm + rost_nparent_acm)
+				    }	
+			}
+		});
+	});
 	$(document).ready(function(){
-      $('#D_ID').keyup(function(){
+      $('#D_ID_2').keyup(function(){
 			var query_d = $(this).val();
 			if(query_d != '')
 			{
@@ -1180,24 +1864,44 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
 						data:{query_d:query_d},
 						success:function(data)
 						{
-							$('#list_d').fadeIn();
-							$('#list_d').html(data);
+							$('#list_d_2').fadeIn();
+							$('#list_d_2').html(data);
 						}
 					});
 			}
 		});
-
-		$(document).on('click', '.D_ID ul li', function(){
+		$(document).on('click', '.D_ID_2 ul li', function(){
 			// alert($(this).attr('attr-d_id'))
-			$('#D_ID').val($(this).text());
-			$('#modalPersonal input[type="hidden"][name="D_ID"]').val( $(this).attr('attr-d_id') );
-
-			$('#list_d').fadeOut();
+			$('#D_ID_2').val($(this).text());
+			$('#EditModal input[type="hidden"][name="D_ID_2"]').val( $(this).attr('attr-d_id_2') );
+			$('#list_d_2').fadeOut();
 		});
 	});
-
-
-	$('#modalPersonal form#user_form').on('submit', function (event) {
+	$(document).ready(function(){
+      $('#D_ID_1').keyup(function(){
+			var query_a = $(this).val();
+			if(query_a != '')
+			{
+					$.ajax({
+						url:"data_cpos.php",
+						method:"POST",
+						data:{query_a:query_a},
+						success:function(data)
+						{
+							$('#list_d_1').fadeIn();
+							$('#list_d_1').html(data);
+						}
+					});
+			}
+		});
+		$(document).on('click', '.D_ID_1 ul li', function(){
+			// alert($(this).attr('attr-d_id'))
+			$('#D_ID_1').val($(this).text());
+			$('#modalPersonal input[type="hidden"][name="D_ID_1"]').val( $(this).attr('attr-d_id_1') );
+			$('#list_d_1').fadeOut();
+		});
+	});
+	$('#modalPersonal form#per_form').on('submit', function (event) {
 			var _this = $(this)
 			$.ajax({
 				type: "POST",
@@ -1213,11 +1917,9 @@ $NRPT_ACM_1 = $row2['NRPT_ACM'];
 					// alert('บันทึกข้อมูลเรียบร้อยแล้ว')
 				}
 			});
-
 			// console.log( $(this).serialize() )
 		event.preventDefault()
 	});
-
 	$('select[name="search"]').select2({
 		width: '100%'
 	});

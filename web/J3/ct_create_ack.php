@@ -309,7 +309,6 @@ if($num > 0){
               WHERE  UNIT_CODE LIKE '".substr($_POST["UNIT_CODE_PARENT"],0,8)."".'00'."'
                ";
 
-               echo $sql_update_j3_rost_approve;
             $result = mysqli_query($conn, $sql_update_j3_rost_approve) or die(mysqli_error());
 
 
@@ -385,6 +384,25 @@ if($num > 0){
             echo 'แผนก';
         break;
     }
+
+
+    $sql_select_j3_nrpt_approve = "SELECT * FROM `j3_nrpt_approve` WHERE 1 ";
+    $result = mysqli_query($conn, $sql_select_j3_nrpt_approve) or die(mysqli_error());
+    while( $row = mysqli_fetch_assoc($result) ) {
+        $sql_insert_into_j3_nrpt_transaction = "INSERT INTO `j3_nrpt_transaction` (`TRANSACTION_ID`, `UNIT_CODE`, `NRPT_NAME`, `NRPT_ACM`, `NRPT_NUNIT`, `NRPT_NPAGE`, `NRPT_DMYUPD`, `NRPT_UNIT_PARENT`, `NRPT_USER`, `UNIT_ACM_ID`, `STATUS`, `ACK_NUM_ID`) VALUES (NULL, '".$row["UNIT_CODE"]."', '".$row["NRPT_NAME"]."', '".$row["NRPT_ACM"]."', '".$row["NRPT_NUNIT"]."', '".$row["NRPT_NPAGE"]."', current_timestamp(), '".$row["NRPT_UNIT_PARENT"]."', '".$row["NRPT_USER"]."', '".$row["UNIT_ACM_ID"]."', '1', '".$ACK_NUM_ID."')";
+
+        $result_transaction = mysqli_query($conn, $sql_insert_into_j3_nrpt_transaction)  or die(mysqli_error());
+
+    }
+
+    $sql_select_j3_rost_approve = "SELECT * FROM `j3_rost_approve` WHERE 1 ";
+    $result = mysqli_query($conn, $sql_select_j3_rost_approve) or die(mysqli_error());
+    while( $row = mysqli_fetch_assoc($result) ) {
+        $sql_insert_into_j3_rost_transaction = "INSERT INTO `j3_rost_transaction` (`TRANSACTION_ID`, `ROST_UNIT`, `ROST_CPOS`, `ROST_POSNAME`, `ROST_POSNAME_ACM`, `ROST_RANK`, `ROST_RANKNAME`, `ROST_LAO_MAJ`, `ROST_NCPOS12`, `ROST_ID`, `ROST_PARENT`, `ROST_NUNIT`, `ROST_NPARENT`, `ACK_NUM_ID`, `STATUS`, `VERSION`) VALUES (NULL ,'".$row["ROST_UNIT"]."', '".$row["ROST_CPOS"]."', '".$row["ROST_POSNAME"]."', '".$row["ROST_POSNAME_ACM"]."', '".$row["ROST_RANK"]."', '".$row["ROST_RANKNAME"]."', '".$row["ROST_LAO_MAJ"]."', '".$row["ROST_NCPOS12"]."', '".$row["ROST_ID"]."', '".$row["ROST_PARENT"]."', '".$row["ROST_NUNIT"]."', '".$row["ROST_NPARENT"]."', '".$row["ACK_NUM_ID"]."', '1', '".$row["VERSION"]."')";
+        
+        $result_transaction = mysqli_query($conn, $sql_insert_into_j3_rost_transaction)  or die(mysqli_error());
+    }
+
 
 
     

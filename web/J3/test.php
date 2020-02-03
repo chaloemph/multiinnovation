@@ -1,18 +1,20 @@
 <?php
-    
-        include 'connect.php';
-        $ACK_NUM_ID = 1;
-        $sql = "SELECT * FROM `ack_log` WHERE ACK_NUM_ID = ".$ACK_NUM_ID." ";
-        $res = mysqli_query($conn,$sql) or die(mysql_error());
-        while( $row = mysqli_fetch_assoc($res) ) {
-            $row["LOG_QUERY"] = str_replace("j3_rost", "j3_rost_approve", $row["LOG_QUERY"]);
+$conn = mysqli_connect("multiinnovation_db_1", "root", "root", "rtarf");
 
-            echo $row["LOG_QUERY"];
-            $query = mysqli_query($conn,$row["LOG_QUERY"]) or die(mysql_error());
-            while( $result = mysqli_fetch_assoc($query) ) {
-                print_r($result);
-            }
-        }
-    
+if (!$conn) {
+    echo "Error: Unable to connect to MySQL." . PHP_EOL;
+    echo "Debugging errno: " . mysqli_connect_errno() . PHP_EOL;
+    echo "Debugging error: " . mysqli_connect_error() . PHP_EOL;
+    exit;
+}
 
-?>	
+mysqli_set_charset($conn,"utf8");
+
+$query = "SELECT * FROM `j3_part` WHERE 1 ";
+$result = mysqli_query($conn, $query);
+$row = mysqli_fetch_all($result, MYSQLI_ASSOC);
+print_r($row);
+
+
+mysqli_close($conn);
+?>
