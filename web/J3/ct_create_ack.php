@@ -195,7 +195,7 @@ if($num > 0){
         
             $sql_insert_j3_nrpt = "INSERT INTO `j3_nrpt_approve` 
             SELECT * FROM `j3_nrpt` WHERE  SUBSTRING(UNIT_CODE, 1, 5) LIKE '".substr($_POST["UNIT_CODE_PARENT"] , 0, 5)."'  ";
-            $result = mysqli_query($conn, $sql_insert_j3_nrpt) or die(mysqli_error());
+            $result = mysqli_query($conn, $sql_insert_j3_nrpt) or die(mysqli_error($conn));
             
 
              $sql_select_j3_rost = "SELECT * FROM `j3_rost` WHERE SUBSTRING(ROST_NUNIT, 1, 5) LIKE '".substr($_POST["UNIT_CODE_PARENT"] , 0, 5)."' ";
@@ -235,13 +235,13 @@ if($num > 0){
 
             $sql_update_j3_nrpt_approve = "UPDATE `j3_nrpt_approve` SET 
              
-             NRPT_UNIT_PARENT = Replace(NRPT_UNIT_PARENT , Substring(NRPT_UNIT_PARENT, 1, 4), ".substr( $_POST["UNIT_NAME2"] , 0 , 4)." )  ,
+             NRPT_UNIT_PARENT = '".substr($_POST["UNIT_NAME2"],0,4)."".'000000'."'   ,
              UNIT_CODE = Replace(UNIT_CODE , Substring(UNIT_CODE, 1, 5), ".substr( $_POST["UNIT_NAME2"] , 0 , 5)." )  ,
              NRPT_NUNIT = Replace(NRPT_NUNIT , Substring(NRPT_NUNIT, 1, 5), ".substr( $_POST["UNIT_NAME2"] , 0 , 5)." )  ,
              UNIT_ACM_ID = '".substr($_POST["UNIT_NAME2"],0,4)."".'000000'."' ,
              NRPT_NAME = REPLACE(NRPT_NAME, '".$_POST["UNIT_NAME_OLD"]."', '".$_POST["UNIT_NAME"]."') ,
              NRPT_ACM = REPLACE(NRPT_ACM, '".$_POST["UNIT_NAME_ACK_OLD"]."', '".$_POST["UNIT_NAME_ACK"]."') 
-             WHERE   NRPT_UNIT_PARENT LIKE '".substr($_POST["UNIT_CODE_PARENT"],0,2)."".'00000000'."'
+             WHERE  UNIT_CODE LIKE '".substr($_POST["UNIT_NAME2"],0,6)."".'0000'."'
                ";
             $result = mysqli_query($conn, $sql_update_j3_nrpt_approve) or die(mysqli_error());
 
