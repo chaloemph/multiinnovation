@@ -355,13 +355,11 @@ $DMY3 = substr($UNIT_DMY_2,4,4);
 
 
 																$sql2 = "SELECT *,COUNT(ROST_ID) FROM j3_rost_transaction
-																WHERE ROST_NPARENT = :ACK_NUM_ID OR ROST_NUNIT = :UNIT_CODE_4 OR ROST_UNIT = :UNIT_CODE_5 OR ROST_PARENT = :UNIT_CODE_6 
+																WHERE ROST_NPARENT = :ACK_NUM_ID OR ROST_NUNIT = :UNIT_CODE_2 OR ROST_UNIT = :UNIT_CODE_2 OR ROST_PARENT = :UNIT_CODE_2 
 																GROUP BY ROST_RANK ORDER BY ROST_RANK";
 																$stmt2=$db->prepare($sql2);
 																$stmt2->bindparam(':ACK_NUM_ID',$ACK_NUM_ID);
-																$stmt2->bindparam(':UNIT_CODE_4',$UNIT_CODE_4);
-																$stmt2->bindparam(':UNIT_CODE_5',$UNIT_CODE_5);
-																$stmt2->bindparam(':UNIT_CODE_6',$UNIT_CODE_6);
+																$stmt2->bindparam(':UNIT_CODE_2',$UNIT_CODE_2);
 																$stmt2->execute();
 																while($row2=$stmt2->fetch(PDO::FETCH_ASSOC)){
 																	$COUNT = $row2['COUNT(ROST_ID)'];
@@ -425,13 +423,11 @@ $DMY3 = substr($UNIT_DMY_2,4,4);
 															
 															include ('connectpdo.php');
 																	$sql2 = "SELECT *,COUNT(ROST_ID) FROM j3_rost_transaction
-																	WHERE ROST_NPARENT = :ACK_NUM_ID OR ROST_NUNIT = :UNIT_CODE_4 OR ROST_UNIT = :UNIT_CODE_5 OR ROST_PARENT = :UNIT_CODE_6 
+																	WHERE ROST_NPARENT = :ACK_NUM_ID OR ROST_NUNIT = :UNIT_CODE_2 OR ROST_UNIT = :UNIT_CODE_2 OR ROST_PARENT = :UNIT_CODE_2 
 																	GROUP BY ROST_RANK ORDER BY ROST_RANK";
 																	$stmt2=$db->prepare($sql2);
 																	$stmt2->bindparam(':ACK_NUM_ID',$ACK_NUM_ID);
-																	$stmt2->bindparam(':UNIT_CODE_4',$UNIT_CODE_4);
-																	$stmt2->bindparam(':UNIT_CODE_5',$UNIT_CODE_5);
-																	$stmt2->bindparam(':UNIT_CODE_6',$UNIT_CODE_6);
+																	$stmt2->bindparam(':UNIT_CODE_2',$UNIT_CODE_2);
 																	$stmt2->execute();
 																	$SUM = "0";
 																	while($row2=$stmt2->fetch(PDO::FETCH_ASSOC)){
@@ -486,13 +482,11 @@ $DMY3 = substr($UNIT_DMY_2,4,4);
 														<?php
 															include ('connectpdo.php');
 															$sql2 = "SELECT *,COUNT(ROST_ID) FROM j3_rost_transaction
-															WHERE ROST_NPARENT = :ACK_NUM_ID OR ROST_NUNIT = :UNIT_CODE_4 OR ROST_UNIT = :UNIT_CODE_5 OR ROST_PARENT = :UNIT_CODE_6 
+															WHERE ROST_NPARENT = :ACK_NUM_ID OR ROST_NUNIT = :UNIT_CODE_2 OR ROST_UNIT = :UNIT_CODE_2 OR ROST_PARENT = :UNIT_CODE_2 
 															GROUP BY ROST_RANK ORDER BY ROST_RANK";
 															$stmt2=$db->prepare($sql2);
 															$stmt2->bindparam(':ACK_NUM_ID',$ACK_NUM_ID);
-															$stmt2->bindparam(':UNIT_CODE_4',$UNIT_CODE_4);
-															$stmt2->bindparam(':UNIT_CODE_5',$UNIT_CODE_5);
-															$stmt2->bindparam(':UNIT_CODE_6',$UNIT_CODE_6);
+															$stmt2->bindparam(':UNIT_CODE_2',$UNIT_CODE_2);
 															$stmt2->execute();
 															$SUM = "0";
 															while($row2=$stmt2->fetch(PDO::FETCH_ASSOC)){
@@ -517,13 +511,11 @@ $DMY3 = substr($UNIT_DMY_2,4,4);
 														<?php
 															include ('connectpdo.php');
 															$sql2 = "SELECT *,COUNT(ROST_ID) FROM j3_rost_transaction
-															WHERE ROST_NPARENT = :ACK_NUM_ID OR ROST_NUNIT = :UNIT_CODE_4 OR ROST_UNIT = :UNIT_CODE_5 OR ROST_PARENT = :UNIT_CODE_6
+															WHERE ROST_NPARENT = :ACK_NUM_ID OR ROST_NUNIT = :UNIT_CODE_2 OR ROST_UNIT = :UNIT_CODE_2 OR ROST_PARENT = :UNIT_CODE_2
 															GROUP BY ROST_RANK ORDER BY ROST_RANK";
 															$stmt2=$db->prepare($sql2);
 															$stmt2->bindparam(':ACK_NUM_ID',$ACK_NUM_ID);
-															$stmt2->bindparam(':UNIT_CODE_4',$UNIT_CODE_4);
-															$stmt2->bindparam(':UNIT_CODE_5',$UNIT_CODE_5);
-															$stmt2->bindparam(':UNIT_CODE_6',$UNIT_CODE_6);
+															$stmt2->bindparam(':UNIT_CODE_2',$UNIT_CODE_2);
 															$stmt2->execute();
 															$SUM = "0";
 															while($row2=$stmt2->fetch(PDO::FETCH_ASSOC)){
@@ -548,13 +540,11 @@ $DMY3 = substr($UNIT_DMY_2,4,4);
 														<?php
 															include ('connectpdo.php');
 															$sql2 = "SELECT *,COUNT(ROST_ID) FROM j3_rost_transaction
-															WHERE ROST_NPARENT = :ACK_NUM_ID OR ROST_NUNIT = :UNIT_CODE_4 OR ROST_UNIT = :UNIT_CODE_5 OR ROST_PARENT = :UNIT_CODE_6
+															WHERE ROST_NPARENT = :ACK_NUM_ID OR ROST_NUNIT = :UNIT_CODE_2 OR ROST_UNIT = :UNIT_CODE_2 OR ROST_PARENT = :UNIT_CODE_2
 															GROUP BY ROST_RANK ORDER BY ROST_RANK";
 															$stmt2=$db->prepare($sql2);
 															$stmt2->bindparam(':ACK_NUM_ID',$ACK_NUM_ID);
-															$stmt2->bindparam(':UNIT_CODE_4',$UNIT_CODE_4);
-															$stmt2->bindparam(':UNIT_CODE_5',$UNIT_CODE_5);
-															$stmt2->bindparam(':UNIT_CODE_6',$UNIT_CODE_6);
+															$stmt2->bindparam(':UNIT_CODE_2',$UNIT_CODE_2);
 															$stmt2->execute();
 															$SUM = "0";
 															while($row2=$stmt2->fetch(PDO::FETCH_ASSOC)){
@@ -578,16 +568,16 @@ $DMY3 = substr($UNIT_DMY_2,4,4);
 									<div id="Sturc1" class="tabcontent">
 										<?php
 											include ('connectpdo.php');
-											$sql3 = "SELECT * FROM j3_nrpt_transaction WHERE NRPT_UNIT_PARENT = :UNIT_CODE_4";
+											$sql3 = "SELECT * FROM j3_nrpt_transaction WHERE NRPT_UNIT_PARENT = :UNIT_CODE_2";
 											$stmt3=$db->prepare($sql3);
-											$stmt3->bindparam(':UNIT_CODE_4',$UNIT_CODE_4);
+											$stmt3->bindparam(':UNIT_CODE_2',$UNIT_CODE_2);
 											$stmt3->execute();
 												$i = "0";
 												while($row3=$stmt3->fetch(PDO::FETCH_ASSOC)){
 													$SUB1 = substr($row3['UNIT_CODE'],6);
 													
 													if($SUB1 != "0001" && $SUB1 != "0002" && $SUB1 != "0003" && $SUB1 != "9999" && $SUB1 != "9998"  && $SUB1 != "0900"){
-														if($row3['NRPT_UNIT_PARENT'] == $UNIT_CODE_4){
+														if($row3['NRPT_UNIT_PARENT'] == $UNIT_CODE_2){
 															$UNIT3 = $row3['UNIT_CODE'];
 															$SUB = substr($UNIT_CODE_4,0,2);
 															$i++;
@@ -689,6 +679,7 @@ $DMY3 = substr($UNIT_DMY_2,4,4);
 																							</div>
 																						</div>
 																					</div>
+																					<br>
 																					<div class="row">
 																						<div class="col-12 col-sm-6">
 																							<div class="form-group">
@@ -781,77 +772,72 @@ $DMY3 = substr($UNIT_DMY_2,4,4);
 										<a href="iframe_tree.php?id=<?=$UNIT_CODE_2?>&id2=<?=$ACK_NUM_ID?>" target="_blank" class="btn btn-primary"><i class="fas fa-print"></i> Print</a>
 										<a href="report_2.php?id=<?=$UNIT_CODE_2?>&id2=<?=$ACK_NUM_ID?>"><button type="button" class="btn btn-danger"><i class="fas fa-file-pdf"></i> PDF</button></a>
 										<div style="text-align: center;">
-											<?php
-											include ('connectpdo.php');
-											$sql6 = "SELECT * FROM j3_nrpt_transaction WHERE UNIT_CODE = :UNIT_CODE_2" ;
-											$stmt6=$db->prepare($sql6);
-											$stmt6->bindparam(':UNIT_CODE_2',$UNIT_CODE_2);
-											$stmt6->execute();
-											$row6=$stmt6->fetch(PDO::FETCH_ASSOC);
-											$data = $row6['UNIT_CODE'];
-											echo '<div class="tf-tree tf-gap-sm">
-											<ul>
-											<li>
-											<span class="tf-node-content">
-											'. $row6['NRPT_ACM'] .'
-											</span>';
-											if($data == $UNIT_CODE_2){
-												$sql8 = "SELECT * FROM j3_nrpt_transaction WHERE NRPT_UNIT_PARENT = :data" ;
-												$stmt8=$db->prepare($sql8);
-												$stmt8->bindparam(':data',$data);
-												$stmt8->execute();
-												$row8=$stmt8->fetch(PDO::FETCH_ASSOC);
-												if($row8['NRPT_UNIT_PARENT'] == $data){
-													echo '<ul>';
-													$stmt8->execute();
-													while($row8=$stmt8->fetch(PDO::FETCH_ASSOC)){
-														$SUB = substr($row8['UNIT_CODE'],6);
-																		//echo $SUB;
-														if($SUB != "0001" && $SUB != "0002" && $SUB != "0003" && $SUB != "9999" && $SUB != "9998"  && $SUB != "0900"){
-															if($row8['NRPT_UNIT_PARENT'] == $data){
-																$send = $row8['UNIT_CODE'];
-																				//echo $row8['UNIT_CODE'];
-																echo '<li>
-																<span class="tf-node-content">
-																'. $row8['NRPT_ACM'] .'
-																</span>';
-																				//$row8['UNIT_CODE'] != "6150000001" && $row8['UNIT_CODE'] != "6150000002" && $row8['UNIT_CODE'] != "6150000003" && 
-																				$sql7 = "SELECT * FROM j3_nrpt_transaction WHERE NRPT_UNIT_PARENT = :send";
-																				$stmt7=$db->prepare($sql7);
-																				$stmt7->bindparam(':send',$send);
-																				$stmt7->execute();
-																				$row7=$stmt7->fetch(PDO::FETCH_ASSOC);
-																				
-																				if($row7['NRPT_UNIT_PARENT'] == $send){
-																					echo '<ul>';
-																					$stmt7->execute();
-																					while($row7=$stmt7->fetch(PDO::FETCH_ASSOC)){
-																						$parent1 = $row7['NRPT_UNIT_PARENT'];
-																						if($row7['NRPT_UNIT_PARENT'] == $send){
-																							
-																							echo '<li>
-																									<span class="tf-nc">
-																										'. $row7['NRPT_ACM'] .'
-																									</span>
-																								</li>';
-																							
-																						}
-																					}
-																					echo '</ul>';
-																				}
-																			}
-																			echo '
-																			</li>';
-																		}
-																	}
-																}
-																echo '</ul>';
-															}          
-															echo '
-															</li>
-															</ul>
-															</div>';					
-															?>
+											<section class="basic-style">
+        <div class="hv-container">
+            <div class="hv-wrapper">
+                <div class="hv-item">
+
+	<?php
+
+		include ('connect.php');
+
+		$UNIT_CODE = 6150500000;
+
+		$sql = "SELECT * FROM j3_nrpt_transaction WHERE UNIT_CODE = :UNIT_CODE ";
+		$stmt=$db->prepare($sql);
+		$stmt->bindparam(':UNIT_CODE',$UNIT_CODE);
+		$stmt->execute();
+		while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
+
+			$UNIT_CODE_1 = $row['UNIT_CODE'];
+			$NRPT_NAME = $row['NRPT_NAME'];
+			$NRPT_UNIT_PARENT = $row['NRPT_UNIT_PARENT'];
+
+			$NRPT_NAME = explode(' ', $row['NRPT_NAME']);
+			$NRPT_NAME = $NRPT_NAME[0];
+
+
+	?>		
+
+                    <div class="hv-item-parent">
+                        <p class="simple-card" style="font-color: black;"><?=$NRPT_NAME?></p>
+                    </div>
+
+    <?php  }  ?>
+
+
+                    <div class="hv-item-children">
+
+    <?php
+    
+    	$sql1 = "SELECT * FROM j3_nrpt_transaction WHERE NRPT_UNIT_PARENT = :UNIT_CODE_1 AND SUBSTRING(UNIT_CODE, 1, 6) != '0001' AND SUBSTRING(UNIT_CODE, 1, 6) != '0900' AND SUBSTRING(UNIT_CODE, 1, 6) != '0002' AND SUBSTRING(UNIT_CODE, 1, 6) != '0003' AND SUBSTRING(UNIT_CODE, 1, 6) != '9999' AND SUBSTRING(UNIT_CODE, 1, 6) != '9998' ";
+		$stmt1=$db->prepare($sql1);
+		$stmt1->bindparam(':UNIT_CODE_1',$UNIT_CODE_1);
+		$stmt1->execute();
+		while($row1=$stmt1->fetch(PDO::FETCH_ASSOC)){
+
+		$NRPT_NAME_1 = $row1['NRPT_NAME'];
+		$NRPT_UNIT_PARENT_1 = $row1['NRPT_UNIT_PARENT'];
+
+		$NRPT_NAME_1 = explode(' ', $row1['NRPT_NAME']);
+		$NRPT_NAME_1 = $NRPT_NAME_1[0];
+
+		$CUT_STR = substr($row1['UNIT_CODE'],6);
+
+		if($CUT_STR != "0001" && $CUT_STR != "0002" && $CUT_STR != "0003" && $CUT_STR != "9999" && $CUT_STR != "9998"  && $CUT_STR != "0900"){
+
+
+    ?>                	
+
+                        <div class="hv-item-child">
+                            <p class="simple-card"><?=$NRPT_NAME_1?></p>
+                        </div>
+    <?php }} ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 														</div>
 													</div>
 
@@ -966,7 +952,7 @@ $DMY3 = substr($UNIT_DMY_2,4,4);
 																	<td style="text-align: center;">        
 																		<div class="table-actions">
 																			<button type="button" id="link_modal" data-toggle="modal" data-target="#EditModal" data-id="<?=$ROST_ID;?>" class="btn btn-success btn-sm editbtn"><i class="fas fa-pencil-alt"></i></button></a>
-																			<a href='delete_rate_p.php?id3=<?=$ROST_ID?>&id4=<?=$ACK_NUM_ID?>' onclick="return confirm('คุณต้องการลบรายการนี้ ใช่หรือไม่ ?')"><button type="button" class="btn btn-icon btn-sm btn-danger"><i class="fas fa-ban"></i></button></a>
+																			<a href='delete_rate_p.php?id3=<?=$TRANSACTION_ID?>&id4=<?=$ACK_NUM_ID?>' onclick="return confirm('คุณต้องการลบรายการนี้ ใช่หรือไม่ ?')"><button type="button" class="btn btn-icon btn-sm btn-danger"><i class="fas fa-ban"></i></button></a>
 																		</div>
 																	</td>
 																</tr>

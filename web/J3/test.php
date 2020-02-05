@@ -1,20 +1,23 @@
 <?php
-$conn = mysqli_connect("multiinnovation_db_1", "root", "root", "rtarf");
 
-if (!$conn) {
-    echo "Error: Unable to connect to MySQL." . PHP_EOL;
-    echo "Debugging errno: " . mysqli_connect_errno() . PHP_EOL;
-    echo "Debugging error: " . mysqli_connect_error() . PHP_EOL;
-    exit;
+$url = "http://www.google.com";
+$ch = curl_init();
+$timeout = 5;
+curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+$html = curl_exec($ch);
+curl_close($ch);
+
+$dom = new DOMDocument();
+
+@$dom->loadHTML($html);
+
+
+print_r($html);
+
+foreach($dom->getElementsByTagName('p') as $link) {
+    echo $dom->saveXML( $link);
+    echo "<br />";
 }
-
-mysqli_set_charset($conn,"utf8");
-
-$query = "SELECT * FROM `j3_part` WHERE 1 ";
-$result = mysqli_query($conn, $query);
-$row = mysqli_fetch_all($result, MYSQLI_ASSOC);
-print_r($row);
-
-
-mysqli_close($conn);
 ?>

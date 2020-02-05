@@ -12,6 +12,8 @@
 <link rel="stylesheet" href="temp_index/plugins/daterangepicker/daterangepicker.css">
 <link rel="stylesheet" href="temp_index/plugins/summernote/summernote-bs4.css">
 <link rel="stylesheet" href="temp_index/plugins/datatables-bs4/css/dataTables.bootstrap4.css">
-<link rel="stylesheet" href="temp_index/thy/scss/thy.css" >
+<!-- <link rel="stylesheet" href="temp_index/thy/scss/thy.css" > -->
+<link rel="stylesheet" href="css/hierarchy-view.css">
+<link rel="stylesheet" href="css/main.css">
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 <script src="https://cdn.ckeditor.com/ckeditor5/16.0.0/classic/ckeditor.js"></script>
