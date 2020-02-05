@@ -908,13 +908,13 @@ $DMY3 = substr($UNIT_DMY_2,4,4);
 															$ACK_VERSION = $row5['ACK_VERSION'];
 
 
-															$sql3 = "SELECT *,COUNT(ROST_ID) FROM j3_rost_transaction WHERE ACK_NUM_ID LIKE '".$ACK_NUM_ID."' GROUP BY ROST_POSNAME_ACM  
-																ORDER BY `j3_rost_transaction`.`ROST_ID` ASC";
+															$sql3 = "SELECT *,COUNT(TRANSACTION_ID) FROM j3_rost_transaction WHERE ACK_NUM_ID LIKE '".$ACK_NUM_ID."' GROUP BY ROST_POSNAME_ACM  
+																ORDER BY `j3_rost_transaction`.`TRANSACTION_ID` ASC";
 															$stmt3=$db->prepare($sql3);
 															$stmt3->bindparam(':UNIT_CODE_2',$UNIT_CODE_2);
 															$stmt3->execute();
 															while($row3=$stmt3->fetch(PDO::FETCH_ASSOC)){
-																$COUNT = $row3['COUNT(ROST_ID)'];
+																$COUNT = $row3['COUNT(TRANSACTION_ID)'];
 																$ROST_UNIT = $row3['ROST_UNIT'];
 																$ROST_CPOS = $row3['ROST_CPOS'];
 																$ROST_POSNAME = $row3['ROST_POSNAME'];
@@ -1281,6 +1281,8 @@ $DMY3 = substr($UNIT_DMY_2,4,4);
 					<input type="hidden" name="ROST_CDEP" id="ROST_CDEP" />
 					<input type="hidden" name="operation" id="operation" />
 					<input type="hidden" name="ROST_ID" id="ROST_ID" />
+					<input type="hidden" name="ACK_NUM_ID" id="ACK_NUM_ID" value="<?php echo $_GET["id"]?>" />
+					<input type="hidden" name="RATE_P_VERSION" id="RATE_P_VERSION" value="<?php echo $ACK_VERSION?>" />
 					<input type="submit" name="updatedata" id="action" class="btn btn-success" value="เพิ่มข้อมูล" />
 					<button type="button" class="btn btn-danger" data-dismiss="modal">ปิดหน้าต่าง</button>
 				</div>

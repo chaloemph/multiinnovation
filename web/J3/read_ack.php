@@ -101,7 +101,7 @@ $count_4 = $row_c3['count'];
 						<tbody>
 							<?php
 
-							$sql = "SELECT * FROM j3_ack ORDER BY ACK_VERSION DESC";
+							$sql = "SELECT * FROM `j3_ack`  ORDER BY ACK_VERSION DESC";
 							$stmt=$db->prepare($sql);
 							$stmt->execute();
 							while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
@@ -122,7 +122,16 @@ $count_4 = $row_c3['count'];
 								$ACK_TIMESTAMP = $row['ACK_TIMESTAMP'];
 								$ACK_STS = $row['ACK_STS'];
 								$ACK_VERSION = $row['ACK_VERSION'];
+								$CHK = $row['CHK'];
 
+								$chk = $db->query("SELECT COUNT(ACK_NUM_ID) AS COUNT FROM j3_ack WHERE ACK_STS LIKE 'อนุมัติ' AND ACK_ID = '$ACK_ID'  ")->fetch()[0];
+								$view = 1;
+								if($chk > 0 AND $ACK_STS != 'อนุมัติ' ) {
+									$view = 0;
+								}
+
+
+								if ($view):
 								?>
 								<tr>
 									<td style="width: 80px; text-align: center;"><?=$ACK_ID?></td>									
@@ -161,6 +170,7 @@ $count_4 = $row_c3['count'];
 										</a>
 									</td>
 								</tr>
+									<?php endif;?>
 							<?php } ?>
 						</tbody>
 					</table>

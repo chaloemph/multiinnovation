@@ -69,7 +69,7 @@
                 $LAO_ID = $_POST['LAO_ID'];
                 $D_ID_2 = $_POST['D_ID_2'];
                 $RATE_SEQ = $_POST['RATE_SEQ'];
-                $RATE_P_VERSION = 1;
+                $RATE_P_VERSION = $_POST['RATE_P_VERSION'];
                 $ROST_UNIT = $_POST['ROST_UNIT'];
                 $ROST_POSNAME = $_POST['ROST_POSNAME'];
                 $ROST_POSNAME_ACM = $_POST['ROST_POSNAME_ACM'];
@@ -119,7 +119,7 @@
                     echo json_encode($stmt->errorInfo());
                 }
               
-                $sql_find_ACK_NUM_ID = "SELECT * FROM `j3_ack` WHERE ACK_ID = '$ACK_ID'";
+                $sql_find_ACK_NUM_ID = "SELECT * FROM `j3_ack` WHERE ACK_NUM_ID = '".$_POST["ACK_NUM_ID"]."' ";
                 $res = mysqli_query($conn, $sql_find_ACK_NUM_ID);
                 $result = mysqli_fetch_assoc($res);
                 $ACK_NUM_ID = $result["ACK_NUM_ID"];
