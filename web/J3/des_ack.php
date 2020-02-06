@@ -1074,8 +1074,8 @@ $DMY3 = substr($UNIT_DMY_2,4,4);
 																echo "";
 															}else if($ACK_STS=="รอการอนุมัติ"){
 																echo "
-																<a href='change_sts.php?id1=$ACK_NUM_ID'><button type='button' class='btn btn-icon btn-danger' style='float: right;' onClick=\"javascript:return confirm('ต้องการอนุมัติ '-'$ACK_ID'-');\" ><i class='fas fa-ban' ></i></button></a>
-																<a href='change_sts.php?id=$ACK_NUM_ID'><button type='button' class='btn btn-icon btn-success' style='float: right;' onClick=\"javascript:return confirm('ต้องการอนุมัติ '-'$ACK_ID'-');\"><i class='fas fa-check'></i></button></a>
+																<a href='change_sts.php?id1=$ACK_NUM_ID'><button type='button' class='btn btn-icon btn-danger' style='float: right;' onclick=\"javascript:return confirm('ต้องการอนุมัติ '-'$ACK_ID'-');\" ><i class='fas fa-ban' ></i></button></a>
+																<a href='change_sts.php?id=$ACK_NUM_ID' id='btn-confirm' attr-id='$ACK_NUM_ID' class='btn btn-icon btn-success' style='float: right;'><i class='fas fa-check'></i></a>
 																";
 															}else{
 																echo "";
@@ -1929,6 +1929,28 @@ $DMY3 = substr($UNIT_DMY_2,4,4);
 	$('#EditModal').on('hidden.bs.modal', function (event) {
 		location.reload()
 	})
+
+	$('#btn-confirm').on('click', function (event) {
+		// event.preventDefault();
+		var _href = $(this).attr("href"); 
+		if (confirm('คุณต้องการอนุมัติ')) {
+			do {
+				var index = prompt("กรุณากรอกลำดับ :")
+			} while (isNaN(index))
+			
+			$(this).attr('href', 'change_sts.php?id='+$(this).attr('attr-id')+'&index='+index)
+
+			if (index) {
+				return true;
+			} else {
+				return false
+			}
+		}else{
+			return false;
+		}
+
+		
+	});
 </script>
 
 </body>

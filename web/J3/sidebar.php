@@ -54,7 +54,7 @@
                                                 <i class="fas fa-plus-circle nav-icon"></i>
                                                 <p>'. $row2['UNIT_ACM_NAME'] .'</p>
                                             </a>';
-                                    $sql3 = "SELECT * FROM j3_nrpt WHERE NRPT_UNIT_PARENT = :UNIT2";
+                                    $sql3 = "SELECT * FROM j3_nrpt WHERE NRPT_UNIT_PARENT = :UNIT2 ORDER BY SORT ASC";
                                     $stmt3=$db->prepare($sql3);
                                     $stmt3->bindparam(':UNIT2',$UNIT2);
                                     //$stmt3->bindparam(':UNIT_CODE',$UNIT_CODE);

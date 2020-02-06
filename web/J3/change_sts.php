@@ -1,7 +1,8 @@
 <?php
 include ('connect.php');
-
+ 
 $ACK_NUM_ID = $_GET['id'];
+$index = $_GET['index'];
 $sql = "SELECT * FROM `j3_ack` WHERE ACK_NUM_ID = '$ACK_NUM_ID'  ";
 $res = mysqli_query($conn,$sql) or die(mysql_error());
 $row = mysqli_fetch_assoc($res) ;
@@ -30,8 +31,13 @@ switch ($UNIT_ACM_CREATE) {
     case 'กรม':
         $result_query_insert_j3_unit_acm = mysqli_query($conn,$sql_insert_j3_unit_acm) or die(mysqli_error($conn) . "<br>$sql_insert_j3_unit_acm");
 
-        $sql = "INSERT INTO `j3_nrpt` SELECT * FROM `j3_nrpt_transaction` WHERE ACK_NUM_ID  LIKE '$ACK_NUM_ID'  ";
+        $sql = "SELECT * FROM `j3_nrpt_transaction` WHERE ACK_NUM_ID  LIKE '$ACK_NUM_ID'  "; 
         $result = mysqli_query($conn, $sql) or die(mysqli_error());
+        while( $row = mysqli_fetch_assoc($result)) {
+            $sql_insert_j3_nrpt = "INSERT INTO `j3_nrpt` (`UNIT_CODE`, `NRPT_NAME`, `NRPT_ACM`, `NRPT_NUNIT`, `NRPT_NPAGE`, `NRPT_DMYUPD`, `NRPT_UNIT_PARENT`, `NRPT_USER`, `UNIT_ACM_ID`, `STATUS`) VALUES ('".$row["UNIT_CODE"]."', '".$row["NRPT_NAME"]."', '".$row["NRPT_ACM"]."', '".$row["NRPT_NUNIT"]."', '".$row["NRPT_NPAGE"]."', current_timestamp(), '".$row["NRPT_UNIT_PARENT"]."', '".$row["NRPT_USER"]."', '".$row["UNIT_ACM_ID"]."', '1')";
+            mysqli_query($conn, $sql_insert_j3_nrpt) or die(mysqli_error());
+        }
+
         $sql = "DELETE FROM `j3_nrpt_transaction` WHERE ACK_NUM_ID  LIKE '$ACK_NUM_ID' ";
         $result = mysqli_query($conn, $sql) or die(mysqli_error());
 
@@ -68,8 +74,13 @@ switch ($UNIT_ACM_CREATE) {
     case 'สำนัก':
         $result_query_insert_j3_unit_acm = mysqli_query($conn,$sql_insert_j3_unit_acm) or die(mysqli_error($conn) . "<br>$sql_insert_j3_unit_acm");
 
-        $sql = "INSERT INTO `j3_nrpt` SELECT * FROM `j3_nrpt_transaction` WHERE ACK_NUM_ID  LIKE '$ACK_NUM_ID'  ";
+        $sql = "SELECT * FROM `j3_nrpt_transaction` WHERE ACK_NUM_ID  LIKE '$ACK_NUM_ID'  "; 
         $result = mysqli_query($conn, $sql) or die(mysqli_error());
+        while( $row = mysqli_fetch_assoc($result)) {
+            $sql_insert_j3_nrpt = "INSERT INTO `j3_nrpt` (`UNIT_CODE`, `NRPT_NAME`, `NRPT_ACM`, `NRPT_NUNIT`, `NRPT_NPAGE`, `NRPT_DMYUPD`, `NRPT_UNIT_PARENT`, `NRPT_USER`, `UNIT_ACM_ID`, `STATUS`) VALUES ('".$row["UNIT_CODE"]."', '".$row["NRPT_NAME"]."', '".$row["NRPT_ACM"]."', '".$row["NRPT_NUNIT"]."', '".$row["NRPT_NPAGE"]."', current_timestamp(), '".$row["NRPT_UNIT_PARENT"]."', '".$row["NRPT_USER"]."', '".$row["UNIT_ACM_ID"]."', '1')";
+            mysqli_query($conn, $sql_insert_j3_nrpt) or die(mysqli_error());
+        }
+
         $sql = "DELETE FROM `j3_nrpt_transaction` WHERE ACK_NUM_ID  LIKE '$ACK_NUM_ID'  ";
         $result = mysqli_query($conn, $sql) or die(mysqli_error());
 
@@ -104,10 +115,6 @@ switch ($UNIT_ACM_CREATE) {
     break;
 
     case 'ศูนย์':
-
-        // $sql = "INSERT INTO `j3_nrpt` SELECT * FROM `j3_nrpt_transaction` WHERE ACK_NUM_ID  LIKE '$ACK_NUM_ID'  ";  
-        // $result = mysqli_query($conn, $sql) or die(mysqli_error($conn));
-
         $sql = "SELECT * FROM `j3_nrpt_transaction` WHERE ACK_NUM_ID  LIKE '$ACK_NUM_ID'  "; 
         $result = mysqli_query($conn, $sql) or die(mysqli_error());
         while( $row = mysqli_fetch_assoc($result)) {
@@ -151,8 +158,13 @@ switch ($UNIT_ACM_CREATE) {
 
     case 'กอง':
 
-        $sql = "INSERT INTO `j3_nrpt` SELECT * FROM `j3_nrpt_transaction` WHERE  ACK_NUM_ID  LIKE '$ACK_NUM_ID'  ";  
+        $sql = "SELECT * FROM `j3_nrpt_transaction` WHERE ACK_NUM_ID  LIKE '$ACK_NUM_ID'  "; 
         $result = mysqli_query($conn, $sql) or die(mysqli_error());
+        while( $row = mysqli_fetch_assoc($result)) {
+            $sql_insert_j3_nrpt = "INSERT INTO `j3_nrpt` (`UNIT_CODE`, `NRPT_NAME`, `NRPT_ACM`, `NRPT_NUNIT`, `NRPT_NPAGE`, `NRPT_DMYUPD`, `NRPT_UNIT_PARENT`, `NRPT_USER`, `UNIT_ACM_ID`, `STATUS`) VALUES ('".$row["UNIT_CODE"]."', '".$row["NRPT_NAME"]."', '".$row["NRPT_ACM"]."', '".$row["NRPT_NUNIT"]."', '".$row["NRPT_NPAGE"]."', current_timestamp(), '".$row["NRPT_UNIT_PARENT"]."', '".$row["NRPT_USER"]."', '".$row["UNIT_ACM_ID"]."', '1')";
+            mysqli_query($conn, $sql_insert_j3_nrpt) or die(mysqli_error());
+        }
+
         $sql = "DELETE FROM `j3_nrpt_transaction` WHERE  ACK_NUM_ID  LIKE '$ACK_NUM_ID'  ";
         $result = mysqli_query($conn, $sql) or die(mysqli_error());
 
@@ -188,8 +200,13 @@ switch ($UNIT_ACM_CREATE) {
 
     case 'แผนก':
 
-        $sql = "INSERT INTO `j3_nrpt` SELECT * FROM `j3_nrpt_transaction` WHERE  ACK_NUM_ID  LIKE '$ACK_NUM_ID'  ";  
+        $sql = "SELECT * FROM `j3_nrpt_transaction` WHERE ACK_NUM_ID  LIKE '$ACK_NUM_ID'  "; 
         $result = mysqli_query($conn, $sql) or die(mysqli_error());
+        while( $row = mysqli_fetch_assoc($result)) {
+            $sql_insert_j3_nrpt = "INSERT INTO `j3_nrpt` (`UNIT_CODE`, `NRPT_NAME`, `NRPT_ACM`, `NRPT_NUNIT`, `NRPT_NPAGE`, `NRPT_DMYUPD`, `NRPT_UNIT_PARENT`, `NRPT_USER`, `UNIT_ACM_ID`, `STATUS`) VALUES ('".$row["UNIT_CODE"]."', '".$row["NRPT_NAME"]."', '".$row["NRPT_ACM"]."', '".$row["NRPT_NUNIT"]."', '".$row["NRPT_NPAGE"]."', current_timestamp(), '".$row["NRPT_UNIT_PARENT"]."', '".$row["NRPT_USER"]."', '".$row["UNIT_ACM_ID"]."', '1')";
+            mysqli_query($conn, $sql_insert_j3_nrpt) or die(mysqli_error());
+        }
+
         $sql = "DELETE FROM `j3_nrpt_transaction` WHERE  ACK_NUM_ID  LIKE '$ACK_NUM_ID'  ";
         $result = mysqli_query($conn, $sql) or die(mysqli_error());
 
@@ -226,6 +243,26 @@ switch ($UNIT_ACM_CREATE) {
     
 }
 
+
+// sort
+$c = 1;
+$sql = "SELECT * FROM `j3_nrpt` WHERE `NRPT_UNIT_PARENT` LIKE '$UNIT_ACM_ID' AND SUBSTRING(UNIT_CODE, 7, 10) NOT IN (0001, 0002, 0003, 9999, 9998, 0900)";
+$query = mysqli_query($conn,$sql) or die(mysqli_error($conn));
+while( $row = mysqli_fetch_assoc($query)) {
+    if ($c != $index) {
+        $sql_update = "UPDATE `j3_nrpt` SET SORT = '$c' WHERE UNIT_CODE = '".$row["UNIT_CODE"]."'  ";
+        $c++;
+    } else{
+        $c++;
+        $sql_update = "UPDATE `j3_nrpt` SET SORT = '$c' WHERE UNIT_CODE = '".$row["UNIT_CODE"]."'  ";
+        $c++;
+    }
+        mysqli_query($conn,$sql_update) or die(mysqli_error($conn));    
+}
+
+$sql_update = "UPDATE `j3_nrpt` SET SORT = '$index' WHERE UNIT_CODE = '".$UNIT_CODE."'  ";
+mysqli_query($conn,$sql_update) or die(mysqli_error($conn));  
+// end sort
 
 $ACK_NUM_ID_1 = $_GET['id1'];
 

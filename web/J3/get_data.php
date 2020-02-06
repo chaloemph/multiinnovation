@@ -40,10 +40,10 @@ if(isset($_POST["do"]) && $_POST["do"] != "" ){
 			echo json_encode($max_unit_acm_id);
 			break;
 			case 'กอง':
-			$sql = "SELECT MAX(ROST_NPARENT) AS MAX FROM `j3_rost` WHERE SUBSTRING(ROST_NPARENT, 1, 2) LIKE '".substr($UNIT_CODE , 0 ,2)."' ";
+			$sql = "SELECT MAX(SUBSTRING(UNIT_CODE, 1, 8 )) AS MAX FROM `j3_nrpt` WHERE SUBSTRING(UNIT_CODE, 1, 5) LIKE '".substr($UNIT_CODE_PARENT , 0 ,5)."' ";
 			$res = mysqli_query($conn, $sql);
 			$result = mysqli_fetch_assoc($res);
-			$max_unit_acm_id = $result["MAX"] + 100;
+			$max_unit_acm_id = $result["MAX"]."00" + 100;
 			echo json_encode($max_unit_acm_id);
 			break;
 			case 'แผนก':

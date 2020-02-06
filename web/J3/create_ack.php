@@ -448,7 +448,7 @@ while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
 								data: {do: 'get_max' , UNIT_ACM_CREATE : UNIT_ACM_CREATE, UNIT_CODE: $('select#UNIT_ACM').val() , UNIT_CODE_PARENT:$('input[name="UNIT_CODE_PARENT"]').val() },
 								// dataType: "",
 								success: function (response) {
-									// console.log(response)
+									console.log(response)
 									$('input[name="UNIT_NAME2"]').val(response)
 									$('input[name="UNIT_NAME2"]').attr('value' , response)
 								}
